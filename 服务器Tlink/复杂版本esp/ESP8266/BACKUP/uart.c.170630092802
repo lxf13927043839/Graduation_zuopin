@@ -1,0 +1,161 @@
+// Crystal: 16.000Mhz
+
+#include <iom64v.h>
+#include <macros.h>
+#include <string.h>  
+#include "uart.h"
+
+
+ unsigned int pctomcu_num=0,e8266tomcu_num=0;
+ unsigned char pctomcu_str[1024];
+ unsigned char e8266tomcu_str[1024];
+ extern unsigned char linkokflag;
+
+//UART0 initialize
+// desired baud rate: 9600
+// actual: baud rate:9615 (0.2%)
+// char size: 8 bit
+// parity: Disabled
+void uart0_init(void)//连接电脑
+{
+ UCSR0B = 0x00; //disable while setting baud rate
+ UCSR0A = 0x00;
+ UCSR0C = 0x06;
+ UBRR0L = 0x67; //set baud rate lo
+ UBRR0H = 0x00; //set baud rate hi
+ UCSR0B = 0x98;
+}
+
+//UART1 initialize
+// desired baud rate:9600
+// actual baud rate:9615 (0.2%)
+// char size: 8 bit
+// parity: Disabled
+void uart1_init(void)//连接8266
+{
+ UCSR1B = 0x00; //disable while setting baud rate
+ UCSR1A = 0x00;
+ UCSR1C = 0x06;
+ UBRR1L = 0x67; //set baud rate lo
+ UBRR1H = 0x00; //set baud rate hi
+ UCSR1B = 0x98;
+}
+
+#pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+void uart0_rx_isr(void)  //接收电脑发来的数据
+{
+ //添加状态机，只接收以[开始的数据，以]结束后上报到服务器，
+ //以\0代替最后的]标记，然后修改主程序是上传标记位timensflag=1;立即上报服务 
+ //uart has received a character in UDR
+   static unsigned char pctowifidatastate = 0;
+   unsigned char data;
+   unsigned int i;
+   data=UDR0;
+   ///////////wifi连接成功以后才对电脑/协调器发来的处理进行处理//////////////
+   if(linkokflag==1){
+      switch(pctowifidatastate){
+	     case 0:   
+         if(data=='['){//接收完电脑发过来的数据,判断数据是否为[，是则正式接收
+	       pctowifidatastate = 1;
+		   pctomcu_num = 0;
+	  	 }
+	  	 break;	
+	  	 case 1:	
+      	 pctomcu_str[pctomcu_num]=data;
+      	 pctomcu_num++;
+      	 if(pctomcu_str[pctomcu_num-1]==']'){//接收完电脑/协调器发过来的数据
+	        pctomcu_str[pctomcu_num-1]='\0';
+         	mcuto8266_str(pctomcu_str);    //从电脑/协调器接收来的数据发给8266
+		 	for(i=0;i<=pctomcu_num;i++)
+         	{
+  	           pctomcu_str[i]=0;   //清空数据缓存
+         	}
+         	pctomcu_num=0;  //计数清0
+		 	pctowifidatastate = 0;//状态回0，重新接收数据包
+	     }	
+	  	 break;   
+      } 
+	}   
+}
+
+
+#pragma interrupt_handler uart1_rx_isr:iv_USART1_RXC
+void uart1_rx_isr(void)   //接收8266发送过来的数据
+{
+ //uart has received a character in UDR
+   unsigned char data;
+   unsigned int i;
+   char *pstr;//用来保存字符匹配的位置
+   char keystateaddr;
+   data = UDR1;
+   e8266tomcu_str[e8266tomcu_num]=data;
+   e8266tomcu_num++;
+   //接收到8266发来的数据是}，表示数据是接收到服务器开关控制，
+   //判断是哪个开关量，然后上报到协调器
+   if(e8266tomcu_str[e8266tomcu_num-1]=='}')  
+   {
+       mcutopc_str(e8266tomcu_str);//把8266发来的数据发送给电脑/协调器，调试用
+	   ////////////////////此处开始判断开关是否按下///////////////////////////
+	   //判断第一个开关
+	   pstr = strstr(e8266tomcu_str,"200053198");
+	   if(pstr != 0){//200053198,"switcher":
+	      keystateaddr = *(pstr+21);
+	      if(keystateaddr=='1'){
+		     PORTG |= (1<<2);
+		  }
+		  if(keystateaddr=='0'){
+		     PORTG &= ~(1<<2);
+		  }
+	   }
+	   //判断第二个开关
+	   pstr = strstr(e8266tomcu_str,"200053199");
+	   if(pstr != 0){//200053198,"switcher":
+	      keystateaddr = *(pstr+21);
+	      if(keystateaddr=='1'){
+		     PORTG |= (1<<3);
+		  }
+		  if(keystateaddr=='0'){
+		     PORTG &= ~(1<<3);
+		  }
+	   }
+	   //////判断开关是否按下代码到此结束////////////////////////////
+       for(i=0;i<e8266tomcu_num;i++)
+       {
+  	      e8266tomcu_str[i]=0;//清空
+       }
+       e8266tomcu_num=0;
+   }
+   if(e8266tomcu_num==1000)e8266tomcu_num=0;
+}
+
+//串口0  连接电脑
+void mcutopcSendByte0(unsigned char data)
+{
+   UDR0 = data;
+   while(!(UCSR0A&(1<<5)));
+}
+
+void mcutopc_str(unsigned char *pstr)
+{
+   while(*pstr)
+   {	  
+      mcutopcSendByte0(*pstr);
+      pstr++;
+   }
+}
+
+//串口1  连接8266
+void mcuto8266SendByte(unsigned char data)
+{
+   UDR1 = data;
+   while(!(UCSR1A&(1<<5)));
+}
+
+void mcuto8266_str(unsigned char *pstr)
+{
+   while(*pstr)
+   {	  
+      mcuto8266SendByte(*pstr);
+      pstr++;
+   }
+}

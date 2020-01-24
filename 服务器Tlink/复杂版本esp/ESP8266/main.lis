@@ -1,0 +1,1264 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ..\..\5ESP82~1\ESP8266\source\main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ..\..\5ESP82~1\ESP8266\source\main.c
+ 0000           _flag::
+ 0000                   .blkb 1
+                        .area idata
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0001                   .dbfile ..\..\5ESP82~1\ESP8266\source\main.c
+ 0001                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0001                   .dbsym e flag _flag c
+ 0001           _time1sflag::
+ 0001                   .blkb 1
+                        .area idata
+ 0001 00                .byte 0
+                        .area data(ram, con, rel)
+ 0002                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0002                   .dbsym e time1sflag _time1sflag c
+ 0002           _timensflag::
+ 0002                   .blkb 1
+                        .area idata
+ 0002 00                .byte 0
+                        .area data(ram, con, rel)
+ 0003                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0003                   .dbsym e timensflag _timensflag c
+ 0003           _linkokflag::
+ 0003                   .blkb 1
+                        .area idata
+ 0003 00                .byte 0
+                        .area data(ram, con, rel)
+ 0004                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0004                   .dbsym e linkokflag _linkokflag c
+ 0004           _time::
+ 0004                   .blkb 1
+                        .area idata
+ 0004 00                .byte 0
+                        .area data(ram, con, rel)
+ 0005                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0005                   .dbsym e time _time c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0000                   .dbfunc e delay _delay fV
+ 0000           ;              i -> R20,R21
+ 0000           ;             ms -> R16,R17
+                        .even
+ 0000           _delay::
+ 0000 4A93              st -y,R20
+ 0002 5A93              st -y,R21
+ 0004                   .dbline -1
+ 0004                   .dbline 25
+ 0004           ; //ICC-AVR application builder : 2015/8/10 13:48:34
+ 0004           ; // Target : M64
+ 0004           ; // Crystal: 16.000Mhz
+ 0004           ; 
+ 0004           ; #include <iom64v.h>
+ 0004           ; #include <macros.h>
+ 0004           ; #include <string.h>  
+ 0004           ; #include "uart.h"
+ 0004           ; 
+ 0004           ; //#include "ESP8266.h"
+ 0004           ; 
+ 0004           ; extern unsigned char e8266tomcu_str[1024];
+ 0004           ; extern unsigned int e8266tomcu_num;
+ 0004           ; unsigned char Txto8266Buf[1024];
+ 0004           ; unsigned char flag=0;
+ 0004           ; 
+ 0004           ; unsigned char time1sflag = 0;
+ 0004           ; unsigned char timensflag = 0;
+ 0004           ; unsigned char linkokflag = 0;
+ 0004           ; 
+ 0004           ; unsigned char time=0;
+ 0004           ; #define   timens   5     //修改发送时间间隔   5秒
+ 0004           ; 
+ 0004           ; void delay(int ms)
+ 0004           ; {
+ 0004 18C0              xjmp L3
+ 0006           L2:
+ 0006                   .dbline 28
+ 0006           ;   int i;
+ 0006           ;   while(ms--)
+ 0006           ;   {
+ 0006                   .dbline 29
+ 0006           ;     for(i=0;i<1000;i++)
+ 0006 4427              clr R20
+ 0008 5527              clr R21
+ 000A           L5:
+ 000A                   .dbline 30
+ 000A           ;       {
+ 000A                   .dbline 31
+ 000A           ;        NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 000A 0000              nop
+ 000C                   .dbline 31
+ 000C 0000              nop
+ 000E                   .dbline 31
+ 000E 0000              nop
+ 0010                   .dbline 31
+ 0010 0000              nop
+ 0012                   .dbline 31
+ 0012 0000              nop
+ 0014                   .dbline 31
+ 0014 0000              nop
+ 0016                   .dbline 31
+ 0016 0000              nop
+ 0018                   .dbline 31
+ 0018 0000              nop
+ 001A                   .dbline 32
+ 001A           ;        NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 001A 0000              nop
+ 001C                   .dbline 32
+ 001C 0000              nop
+ 001E                   .dbline 32
+ 001E 0000              nop
+ 0020                   .dbline 32
+ 0020 0000              nop
+ 0022                   .dbline 32
+ 0022 0000              nop
+ 0024                   .dbline 32
+ 0024 0000              nop
+ 0026                   .dbline 32
+ 0026 0000              nop
+ 0028                   .dbline 32
+ 0028 0000              nop
+ 002A                   .dbline 33
+ 002A           ;       }
+ 002A           L6:
+ 002A                   .dbline 29
+ 002A 4F5F              subi R20,255  ; offset = 1
+ 002C 5F4F              sbci R21,255
+ 002E                   .dbline 29
+ 002E 483E              cpi R20,232
+ 0030 E3E0              ldi R30,3
+ 0032 5E07              cpc R21,R30
+ 0034 54F3              brlt L5
+ 0036           X0:
+ 0036                   .dbline 34
+ 0036           ;   }
+ 0036           L3:
+ 0036                   .dbline 27
+ 0036 1801              movw R2,R16
+ 0038 0150              subi R16,1
+ 003A 1040              sbci R17,0
+ 003C 2220              tst R2
+ 003E 19F7              brne L2
+ 0040 3320              tst R3
+ 0042 09F7              brne L2
+ 0044           X1:
+ 0044                   .dbline -2
+ 0044           L1:
+ 0044                   .dbline 0 ; func end
+ 0044 5991              ld R21,y+
+ 0046 4991              ld R20,y+
+ 0048 0895              ret
+ 004A                   .dbsym r i 20 I
+ 004A                   .dbsym r ms 16 I
+ 004A                   .dbend
+ 004A                   .dbfunc e port_init _port_init fV
+                        .even
+ 004A           _port_init::
+ 004A                   .dbline -1
+ 004A                   .dbline 38
+ 004A           ; }
+ 004A           ; 
+ 004A           ; void port_init(void)
+ 004A           ; {
+ 004A                   .dbline 39
+ 004A           ;  PORTA = 0x00;
+ 004A 2224              clr R2
+ 004C 2BBA              out 0x1b,R2
+ 004E                   .dbline 40
+ 004E           ;  DDRA  = 0x00;
+ 004E 2ABA              out 0x1a,R2
+ 0050                   .dbline 41
+ 0050           ;  PORTB = 0x00;
+ 0050 28BA              out 0x18,R2
+ 0052                   .dbline 42
+ 0052           ;  DDRB  = 0x00;
+ 0052 27BA              out 0x17,R2
+ 0054                   .dbline 43
+ 0054           ;  PORTC = 0x00; //m103 output only
+ 0054 25BA              out 0x15,R2
+ 0056                   .dbline 44
+ 0056           ;  DDRC  = 0x00;
+ 0056 24BA              out 0x14,R2
+ 0058                   .dbline 45
+ 0058           ;  PORTD = 0x00;
+ 0058 22BA              out 0x12,R2
+ 005A                   .dbline 46
+ 005A           ;  DDRD  = 0x00;
+ 005A 21BA              out 0x11,R2
+ 005C                   .dbline 47
+ 005C           ;  PORTE = 0x00;
+ 005C 23B8              out 0x3,R2
+ 005E                   .dbline 48
+ 005E           ;  DDRE  = 0x00;
+ 005E 22B8              out 0x2,R2
+ 0060                   .dbline 49
+ 0060           ;  PORTF = 0x00;
+ 0060 20926200          sts 98,R2
+ 0064                   .dbline 50
+ 0064           ;  DDRF  = 0x00;
+ 0064 20926100          sts 97,R2
+ 0068                   .dbline 51
+ 0068           ;  PORTG = 0x00;
+ 0068 20926500          sts 101,R2
+ 006C                   .dbline 52
+ 006C           ;  DDRG  = 0x1F;
+ 006C 8FE1              ldi R24,31
+ 006E 80936400          sts 100,R24
+ 0072                   .dbline -2
+ 0072           L9:
+ 0072                   .dbline 0 ; func end
+ 0072 0895              ret
+ 0074                   .dbend
+ 0074                   .dbfunc e timer3_init _timer3_init fV
+                        .even
+ 0074           _timer3_init::
+ 0074                   .dbline -1
+ 0074                   .dbline 60
+ 0074           ; }
+ 0074           ; 
+ 0074           ; //TIMER3 initialize - prescale:256
+ 0074           ; // WGM: 0) Normal, TOP=0xFFFF
+ 0074           ; // desired value: 1Sec
+ 0074           ; // actual value:  1.000Sec (0.0%)
+ 0074           ; void timer3_init(void)
+ 0074           ; {
+ 0074                   .dbline 61
+ 0074           ;  TCCR3B = 0x00; //stop
+ 0074 2224              clr R2
+ 0076 20928A00          sts 138,R2
+ 007A                   .dbline 62
+ 007A           ;  TCNT3H = 0x0B; //setup
+ 007A 8BE0              ldi R24,11
+ 007C 80938900          sts 137,R24
+ 0080                   .dbline 63
+ 0080           ;  TCNT3L = 0xDC;
+ 0080 8CED              ldi R24,220
+ 0082 80938800          sts 136,R24
+ 0086                   .dbline 64
+ 0086           ;  OCR3AH = 0xF4;
+ 0086 84EF              ldi R24,244
+ 0088 80938700          sts 135,R24
+ 008C                   .dbline 65
+ 008C           ;  OCR3AL = 0x24;
+ 008C 84E2              ldi R24,36
+ 008E 80938600          sts 134,R24
+ 0092                   .dbline 66
+ 0092           ;  OCR3BH = 0xF4;
+ 0092 84EF              ldi R24,244
+ 0094 80938500          sts 133,R24
+ 0098                   .dbline 67
+ 0098           ;  OCR3BL = 0x24;
+ 0098 84E2              ldi R24,36
+ 009A 80938400          sts 132,R24
+ 009E                   .dbline 68
+ 009E           ;  OCR3CH = 0xF4;
+ 009E 84EF              ldi R24,244
+ 00A0 80938300          sts 131,R24
+ 00A4                   .dbline 69
+ 00A4           ;  OCR3CL = 0x24;
+ 00A4 84E2              ldi R24,36
+ 00A6 80938200          sts 130,R24
+ 00AA                   .dbline 70
+ 00AA           ;  ICR3H  = 0xF4;
+ 00AA 84EF              ldi R24,244
+ 00AC 80938100          sts 129,R24
+ 00B0                   .dbline 71
+ 00B0           ;  ICR3L  = 0x24;
+ 00B0 84E2              ldi R24,36
+ 00B2 80938000          sts 128,R24
+ 00B6                   .dbline 72
+ 00B6           ;  TCCR3A = 0x00;
+ 00B6 20928B00          sts 139,R2
+ 00BA                   .dbline 73
+ 00BA           ;  TCCR3B = 0x04; //start Timer
+ 00BA 84E0              ldi R24,4
+ 00BC 80938A00          sts 138,R24
+ 00C0                   .dbline -2
+ 00C0           L10:
+ 00C0                   .dbline 0 ; func end
+ 00C0 0895              ret
+ 00C2                   .dbend
+                        .area vector(rom, abs)
+                        .org 116
+ 0074 0C946100          jmp _timer3_ovf_isr
+                        .area text(rom, con, rel)
+ 00C2                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 00C2                   .dbfunc e timer3_ovf_isr _timer3_ovf_isr fV
+                        .even
+ 00C2           _timer3_ovf_isr::
+ 00C2 2A92              st -y,R2
+ 00C4 8A93              st -y,R24
+ 00C6 9A93              st -y,R25
+ 00C8 2FB6              IN R2,63
+ 00CA 2A92              st -y,R2
+ 00CC                   .dbline -1
+ 00CC                   .dbline 78
+ 00CC           ; }
+ 00CC           ; 
+ 00CC           ; #pragma interrupt_handler timer3_ovf_isr:iv_TIM3_OVF
+ 00CC           ; void timer3_ovf_isr(void)
+ 00CC           ; {
+ 00CC                   .dbline 81
+ 00CC           ;  //static unsigned char i;
+ 00CC           ;  //TIMER3 has overflowed
+ 00CC           ;  TCNT3H = 0x0B; //reload counter high value
+ 00CC 8BE0              ldi R24,11
+ 00CE 80938900          sts 137,R24
+ 00D2                   .dbline 82
+ 00D2           ;  TCNT3L = 0xDC; //reload counter low value
+ 00D2 8CED              ldi R24,220
+ 00D4 80938800          sts 136,R24
+ 00D8                   .dbline 83
+ 00D8           ;  time1sflag = 1;
+ 00D8 81E0              ldi R24,1
+ 00DA 80930100          sts _time1sflag,R24
+ 00DE                   .dbline 84
+ 00DE           ;  if(++time>timens){timensflag = 1;time=0;}
+ 00DE 80910400          lds R24,_time
+ 00E2 8F5F              subi R24,255    ; addi 1
+ 00E4 282E              mov R2,R24
+ 00E6 20920400          sts _time,R2
+ 00EA 85E0              ldi R24,5
+ 00EC 8215              cp R24,R2
+ 00EE 30F4              brsh L12
+ 00F0           X2:
+ 00F0                   .dbline 84
+ 00F0                   .dbline 84
+ 00F0 81E0              ldi R24,1
+ 00F2 80930200          sts _timensflag,R24
+ 00F6                   .dbline 84
+ 00F6 2224              clr R2
+ 00F8 20920400          sts _time,R2
+ 00FC                   .dbline 84
+ 00FC           L12:
+ 00FC                   .dbline -2
+ 00FC           L11:
+ 00FC                   .dbline 0 ; func end
+ 00FC 2990              ld R2,y+
+ 00FE 2FBE              OUT 63,R2
+ 0100 9991              ld R25,y+
+ 0102 8991              ld R24,y+
+ 0104 2990              ld R2,y+
+ 0106 1895              reti
+ 0108                   .dbend
+ 0108                   .dbfunc e init_devices _init_devices fV
+                        .even
+ 0108           _init_devices::
+ 0108                   .dbline -1
+ 0108                   .dbline 90
+ 0108           ;  
+ 0108           ; }
+ 0108           ; 
+ 0108           ; //call this routine to initialize all peripherals
+ 0108           ; void init_devices(void)
+ 0108           ; {
+ 0108                   .dbline 92
+ 0108           ;  //stop errant interrupts until set up
+ 0108           ;  CLI(); //disable all interrupts
+ 0108 F894              cli
+ 010A                   .dbline 93
+ 010A           ;  XDIV  = 0x00; //xtal divider
+ 010A 2224              clr R2
+ 010C 2CBE              out 0x3c,R2
+ 010E                   .dbline 94
+ 010E           ;  XMCRA = 0x00; //external memory
+ 010E 20926D00          sts 109,R2
+ 0112                   .dbline 95
+ 0112           ;  port_init();
+ 0112 9BDF              xcall _port_init
+ 0114                   .dbline 97
+ 0114           ;  
+ 0114           ;  uart0_init();
+ 0114 0E940000          xcall _uart0_init
+ 0118                   .dbline 98
+ 0118           ;  uart1_init();
+ 0118 0E940000          xcall _uart1_init
+ 011C                   .dbline 99
+ 011C           ;  timer3_init();
+ 011C ABDF              xcall _timer3_init
+ 011E                   .dbline 100
+ 011E           ;  MCUCR = 0x00;
+ 011E 2224              clr R2
+ 0120 25BE              out 0x35,R2
+ 0122                   .dbline 101
+ 0122           ;  EICRA = 0x00; //extended ext ints
+ 0122 20926A00          sts 106,R2
+ 0126                   .dbline 102
+ 0126           ;  EICRB = 0x00; //extended ext ints
+ 0126 2ABE              out 0x3a,R2
+ 0128                   .dbline 103
+ 0128           ;  EIMSK = 0x00;
+ 0128 29BE              out 0x39,R2
+ 012A                   .dbline 104
+ 012A           ;  TIMSK = 0x00; //timer interrupt sources
+ 012A 27BE              out 0x37,R2
+ 012C                   .dbline 105
+ 012C           ;  ETIMSK = 0x04; //extended timer interrupt sources
+ 012C 84E0              ldi R24,4
+ 012E 80937D00          sts 125,R24
+ 0132                   .dbline 106
+ 0132           ;  SEI(); //re-enable interrupts
+ 0132 7894              sei
+ 0134                   .dbline -2
+ 0134           L14:
+ 0134                   .dbline 0 ; func end
+ 0134 0895              ret
+ 0136                   .dbend
+ 0136                   .dbfunc e clearNum _clearNum fV
+ 0136           ;              i -> R20,R21
+ 0136           ;              p -> R16,R17
+                        .even
+ 0136           _clearNum::
+ 0136 4A93              st -y,R20
+ 0138 5A93              st -y,R21
+ 013A                   .dbline -1
+ 013A                   .dbline 109
+ 013A           ;  //all peripherals are now initialized
+ 013A           ; }
+ 013A           ; void clearNum(unsigned char *p){
+ 013A                   .dbline 111
+ 013A           ;     unsigned int i;
+ 013A           ;     for(i=0;i<1020;i++)
+ 013A 4427              clr R20
+ 013C 5527              clr R21
+ 013E 07C0              xjmp L19
+ 0140           L16:
+ 0140                   .dbline 112
+ 0140           ;     {
+ 0140                   .dbline 113
+ 0140           ;           p[i]=0;   //清空数据缓存
+ 0140 FA01              movw R30,R20
+ 0142 E00F              add R30,R16
+ 0144 F11F              adc R31,R17
+ 0146 2224              clr R2
+ 0148 2082              std z+0,R2
+ 014A                   .dbline 114
+ 014A           ;     }
+ 014A           L17:
+ 014A                   .dbline 111
+ 014A 4F5F              subi R20,255  ; offset = 1
+ 014C 5F4F              sbci R21,255
+ 014E           L19:
+ 014E                   .dbline 111
+ 014E 4C3F              cpi R20,252
+ 0150 E3E0              ldi R30,3
+ 0152 5E07              cpc R21,R30
+ 0154 A8F3              brlo L16
+ 0156           X3:
+ 0156                   .dbline -2
+ 0156           L15:
+ 0156                   .dbline 0 ; func end
+ 0156 5991              ld R21,y+
+ 0158 4991              ld R20,y+
+ 015A 0895              ret
+ 015C                   .dbsym r i 20 i
+ 015C                   .dbsym r p 16 pc
+ 015C                   .dbend
+                        .area data(ram, con, rel)
+ 0005                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0005           L21:
+ 0005                   .blkb 1
+                        .area idata
+ 0005 00                .byte 0
+                        .area data(ram, con, rel)
+ 0006                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0006           L22:
+ 0006                   .blkb 1
+                        .area idata
+ 0006 00                .byte 0
+                        .area data(ram, con, rel)
+ 0007                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+                        .area text(rom, con, rel)
+ 015C                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 015C                   .dbfunc e E8266inittotlink _E8266inittotlink fc
+ 015C                   .dbsym s time L22 c
+ 015C                   .dbsym s E8266state L21 c
+                        .even
+ 015C           _E8266inittotlink::
+ 015C 0E940000          xcall push_xgset300C
+ 0160                   .dbline -1
+ 0160                   .dbline 116
+ 0160           ; }
+ 0160           ; unsigned char E8266inittotlink(void){
+ 0160                   .dbline 118
+ 0160           ;     static unsigned char E8266state = 0,time = 0;
+ 0160           ;       switch(E8266state){
+ 0160 40910500          lds R20,L21
+ 0164 5527              clr R21
+ 0166 4030              cpi R20,0
+ 0168 4507              cpc R20,R21
+ 016A 49F1              breq L26
+ 016C           X4:
+ 016C 4130              cpi R20,1
+ 016E E0E0              ldi R30,0
+ 0170 5E07              cpc R21,R30
+ 0172 09F4              brne X22
+ 0174 4AC0              xjmp L31
+ 0176           X22:
+ 0176           X5:
+ 0176 4230              cpi R20,2
+ 0178 E0E0              ldi R30,0
+ 017A 5E07              cpc R21,R30
+ 017C 09F4              brne X23
+ 017E 6BC0              xjmp L36
+ 0180           X23:
+ 0180           X6:
+ 0180 4330              cpi R20,3
+ 0182 E0E0              ldi R30,0
+ 0184 5E07              cpc R21,R30
+ 0186 09F4              brne X24
+ 0188 8DC0              xjmp L40
+ 018A           X24:
+ 018A           X7:
+ 018A 4430              cpi R20,4
+ 018C E0E0              ldi R30,0
+ 018E 5E07              cpc R21,R30
+ 0190 09F4              brne X25
+ 0192 AFC0              xjmp L44
+ 0194           X25:
+ 0194           X8:
+ 0194 4530              cpi R20,5
+ 0196 E0E0              ldi R30,0
+ 0198 5E07              cpc R21,R30
+ 019A 09F4              brne X26
+ 019C D1C0              xjmp L48
+ 019E           X26:
+ 019E           X9:
+ 019E 4630              cpi R20,6
+ 01A0 E0E0              ldi R30,0
+ 01A2 5E07              cpc R21,R30
+ 01A4 09F4              brne X27
+ 01A6 F9C0              xjmp L53
+ 01A8           X27:
+ 01A8           X10:
+ 01A8 4730              cpi R20,7
+ 01AA E0E0              ldi R30,0
+ 01AC 5E07              cpc R21,R30
+ 01AE 09F4              brne X28
+ 01B0 21C1              xjmp L59
+ 01B2           X28:
+ 01B2           X11:
+ 01B2 4830              cpi R20,8
+ 01B4 E0E0              ldi R30,0
+ 01B6 5E07              cpc R21,R30
+ 01B8 09F4              brne X29
+ 01BA 34C1              xjmp L62
+ 01BC           X29:
+ 01BC           X12:
+ 01BC 57C1              xjmp L23
+ 01BE           L26:
+ 01BE                   .dbline 120
+ 01BE           ;         case 0:
+ 01BE           ;         time++;
+ 01BE 80910600          lds R24,L22
+ 01C2 8F5F              subi R24,255    ; addi 1
+ 01C4 80930600          sts L22,R24
+ 01C8                   .dbline 121
+ 01C8           ;         if(strstr(e8266tomcu_str,"ready")!=0){
+ 01C8 20E0              ldi R18,<L29
+ 01CA 30E0              ldi R19,>L29
+ 01CC 00E0              ldi R16,<_e8266tomcu_str
+ 01CE 10E0              ldi R17,>_e8266tomcu_str
+ 01D0 0E940000          xcall _strstr
+ 01D4 0030              cpi R16,0
+ 01D6 0107              cpc R16,R17
+ 01D8 09F4              brne X30
+ 01DA 48C1              xjmp L24
+ 01DC           X30:
+ 01DC           X13:
+ 01DC                   .dbline 121
+ 01DC                   .dbline 122
+ 01DC           ;            mcutopc_str(e8266tomcu_str);
+ 01DC 00E0              ldi R16,<_e8266tomcu_str
+ 01DE 10E0              ldi R17,>_e8266tomcu_str
+ 01E0 0E940000          xcall _mcutopc_str
+ 01E4                   .dbline 123
+ 01E4           ;            clearNum(e8266tomcu_str);
+ 01E4 00E0              ldi R16,<_e8266tomcu_str
+ 01E6 10E0              ldi R17,>_e8266tomcu_str
+ 01E8 A6DF              xcall _clearNum
+ 01EA                   .dbline 124
+ 01EA           ;                time = 0;
+ 01EA 2224              clr R2
+ 01EC 20920600          sts L22,R2
+ 01F0                   .dbline 125
+ 01F0           ;                e8266tomcu_num = 0;
+ 01F0 3324              clr R3
+ 01F2 30920100          sts _e8266tomcu_num+1,R3
+ 01F6 20920000          sts _e8266tomcu_num,R2
+ 01FA                   .dbline 126
+ 01FA           ;            mcuto8266_str("AT+CWMODE=1\r\n");
+ 01FA 00E0              ldi R16,<L30
+ 01FC 10E0              ldi R17,>L30
+ 01FE 0E940000          xcall _mcuto8266_str
+ 0202                   .dbline 127
+ 0202           ;                E8266state = 1;
+ 0202 81E0              ldi R24,1
+ 0204 80930500          sts L21,R24
+ 0208                   .dbline 128
+ 0208           ;         }
+ 0208                   .dbline 129
+ 0208           ;         break;
+ 0208 31C1              xjmp L24
+ 020A           L31:
+ 020A                   .dbline 131
+ 020A           ;         case 1:
+ 020A           ;         time++;
+ 020A 80910600          lds R24,L22
+ 020E 8F5F              subi R24,255    ; addi 1
+ 0210 80930600          sts L22,R24
+ 0214                   .dbline 132
+ 0214           ;         if(strstr(e8266tomcu_str,"OK")!=0){
+ 0214 20E0              ldi R18,<L34
+ 0216 30E0              ldi R19,>L34
+ 0218 00E0              ldi R16,<_e8266tomcu_str
+ 021A 10E0              ldi R17,>_e8266tomcu_str
+ 021C 0E940000          xcall _strstr
+ 0220 0030              cpi R16,0
+ 0222 0107              cpc R16,R17
+ 0224 09F4              brne X31
+ 0226 22C1              xjmp L24
+ 0228           X31:
+ 0228           X14:
+ 0228                   .dbline 132
+ 0228                   .dbline 133
+ 0228           ;            mcutopc_str(e8266tomcu_str);
+ 0228 00E0              ldi R16,<_e8266tomcu_str
+ 022A 10E0              ldi R17,>_e8266tomcu_str
+ 022C 0E940000          xcall _mcutopc_str
+ 0230                   .dbline 134
+ 0230           ;                clearNum(e8266tomcu_str);
+ 0230 00E0              ldi R16,<_e8266tomcu_str
+ 0232 10E0              ldi R17,>_e8266tomcu_str
+ 0234 80DF              xcall _clearNum
+ 0236                   .dbline 135
+ 0236           ;                time = 0;
+ 0236 2224              clr R2
+ 0238 20920600          sts L22,R2
+ 023C                   .dbline 136
+ 023C           ;                e8266tomcu_num = 0;
+ 023C 3324              clr R3
+ 023E 30920100          sts _e8266tomcu_num+1,R3
+ 0242 20920000          sts _e8266tomcu_num,R2
+ 0246                   .dbline 138
+ 0246           ;                //mcuto8266_str("AT+CWJAP=\"zsc\",\"13631103\"\r\n");
+ 0246           ;                mcuto8266_str("AT+CWJAP=\"zsc888\",\"13631103\"\r\n");
+ 0246 00E0              ldi R16,<L35
+ 0248 10E0              ldi R17,>L35
+ 024A 0E940000          xcall _mcuto8266_str
+ 024E                   .dbline 139
+ 024E           ;                E8266state = 2;
+ 024E 82E0              ldi R24,2
+ 0250 80930500          sts L21,R24
+ 0254                   .dbline 140
+ 0254           ;         }
+ 0254                   .dbline 141
+ 0254           ;         break;
+ 0254 0BC1              xjmp L24
+ 0256           L36:
+ 0256                   .dbline 143
+ 0256           ;         case 2:
+ 0256           ;         time++;
+ 0256 80910600          lds R24,L22
+ 025A 8F5F              subi R24,255    ; addi 1
+ 025C 80930600          sts L22,R24
+ 0260                   .dbline 144
+ 0260           ;         if(strstr(e8266tomcu_str,"OK")!=0){
+ 0260 20E0              ldi R18,<L34
+ 0262 30E0              ldi R19,>L34
+ 0264 00E0              ldi R16,<_e8266tomcu_str
+ 0266 10E0              ldi R17,>_e8266tomcu_str
+ 0268 0E940000          xcall _strstr
+ 026C 5801              movw R10,R16
+ 026E 0030              cpi R16,0
+ 0270 0107              cpc R16,R17
+ 0272 09F4              brne X32
+ 0274 FBC0              xjmp L24
+ 0276           X32:
+ 0276           X15:
+ 0276                   .dbline 144
+ 0276                   .dbline 145
+ 0276           ;            mcutopc_str(e8266tomcu_str);
+ 0276 00E0              ldi R16,<_e8266tomcu_str
+ 0278 10E0              ldi R17,>_e8266tomcu_str
+ 027A 0E940000          xcall _mcutopc_str
+ 027E                   .dbline 146
+ 027E           ;                clearNum(e8266tomcu_str);
+ 027E 00E0              ldi R16,<_e8266tomcu_str
+ 0280 10E0              ldi R17,>_e8266tomcu_str
+ 0282 59DF              xcall _clearNum
+ 0284                   .dbline 147
+ 0284           ;                time = 0;
+ 0284 2224              clr R2
+ 0286 20920600          sts L22,R2
+ 028A                   .dbline 148
+ 028A           ;                e8266tomcu_num = 0;
+ 028A 3324              clr R3
+ 028C 30920100          sts _e8266tomcu_num+1,R3
+ 0290 20920000          sts _e8266tomcu_num,R2
+ 0294                   .dbline 149
+ 0294           ;                mcuto8266_str("AT+CIPSTART=\"TCP\",\"tcp.tlink.io\",8647\r\n");
+ 0294 00E0              ldi R16,<L39
+ 0296 10E0              ldi R17,>L39
+ 0298 0E940000          xcall _mcuto8266_str
+ 029C                   .dbline 150
+ 029C           ;                E8266state = 3;
+ 029C 83E0              ldi R24,3
+ 029E 80930500          sts L21,R24
+ 02A2                   .dbline 151
+ 02A2           ;         }
+ 02A2                   .dbline 152
+ 02A2           ;         break;
+ 02A2 E4C0              xjmp L24
+ 02A4           L40:
+ 02A4                   .dbline 154
+ 02A4           ;         case 3:
+ 02A4           ;         time++;
+ 02A4 80910600          lds R24,L22
+ 02A8 8F5F              subi R24,255    ; addi 1
+ 02AA 80930600          sts L22,R24
+ 02AE                   .dbline 155
+ 02AE           ;         if(strstr(e8266tomcu_str,"OK")!=0){
+ 02AE 20E0              ldi R18,<L34
+ 02B0 30E0              ldi R19,>L34
+ 02B2 00E0              ldi R16,<_e8266tomcu_str
+ 02B4 10E0              ldi R17,>_e8266tomcu_str
+ 02B6 0E940000          xcall _strstr
+ 02BA 5801              movw R10,R16
+ 02BC 0030              cpi R16,0
+ 02BE 0107              cpc R16,R17
+ 02C0 09F4              brne X33
+ 02C2 D4C0              xjmp L24
+ 02C4           X33:
+ 02C4           X16:
+ 02C4                   .dbline 155
+ 02C4                   .dbline 156
+ 02C4           ;            mcutopc_str(e8266tomcu_str);
+ 02C4 00E0              ldi R16,<_e8266tomcu_str
+ 02C6 10E0              ldi R17,>_e8266tomcu_str
+ 02C8 0E940000          xcall _mcutopc_str
+ 02CC                   .dbline 157
+ 02CC           ;                clearNum(e8266tomcu_str);
+ 02CC 00E0              ldi R16,<_e8266tomcu_str
+ 02CE 10E0              ldi R17,>_e8266tomcu_str
+ 02D0 32DF              xcall _clearNum
+ 02D2                   .dbline 158
+ 02D2           ;                time = 0;
+ 02D2 2224              clr R2
+ 02D4 20920600          sts L22,R2
+ 02D8                   .dbline 159
+ 02D8           ;                e8266tomcu_num = 0;
+ 02D8 3324              clr R3
+ 02DA 30920100          sts _e8266tomcu_num+1,R3
+ 02DE 20920000          sts _e8266tomcu_num,R2
+ 02E2                   .dbline 160
+ 02E2           ;                mcuto8266_str("AT+CIPMODE=1\r\n");
+ 02E2 00E0              ldi R16,<L43
+ 02E4 10E0              ldi R17,>L43
+ 02E6 0E940000          xcall _mcuto8266_str
+ 02EA                   .dbline 161
+ 02EA           ;                E8266state = 4;
+ 02EA 84E0              ldi R24,4
+ 02EC 80930500          sts L21,R24
+ 02F0                   .dbline 162
+ 02F0           ;         }
+ 02F0                   .dbline 163
+ 02F0           ;         break;
+ 02F0 BDC0              xjmp L24
+ 02F2           L44:
+ 02F2                   .dbline 165
+ 02F2           ;         case 4:
+ 02F2           ;         time++;
+ 02F2 80910600          lds R24,L22
+ 02F6 8F5F              subi R24,255    ; addi 1
+ 02F8 80930600          sts L22,R24
+ 02FC                   .dbline 166
+ 02FC           ;         if(strstr(e8266tomcu_str,"OK")!=0){
+ 02FC 20E0              ldi R18,<L34
+ 02FE 30E0              ldi R19,>L34
+ 0300 00E0              ldi R16,<_e8266tomcu_str
+ 0302 10E0              ldi R17,>_e8266tomcu_str
+ 0304 0E940000          xcall _strstr
+ 0308 5801              movw R10,R16
+ 030A 0030              cpi R16,0
+ 030C 0107              cpc R16,R17
+ 030E 09F4              brne X34
+ 0310 ADC0              xjmp L24
+ 0312           X34:
+ 0312           X17:
+ 0312                   .dbline 166
+ 0312                   .dbline 167
+ 0312           ;            mcutopc_str(e8266tomcu_str);
+ 0312 00E0              ldi R16,<_e8266tomcu_str
+ 0314 10E0              ldi R17,>_e8266tomcu_str
+ 0316 0E940000          xcall _mcutopc_str
+ 031A                   .dbline 168
+ 031A           ;                clearNum(e8266tomcu_str);
+ 031A 00E0              ldi R16,<_e8266tomcu_str
+ 031C 10E0              ldi R17,>_e8266tomcu_str
+ 031E 0BDF              xcall _clearNum
+ 0320                   .dbline 169
+ 0320           ;                time = 0;
+ 0320 2224              clr R2
+ 0322 20920600          sts L22,R2
+ 0326                   .dbline 170
+ 0326           ;                e8266tomcu_num = 0;
+ 0326 3324              clr R3
+ 0328 30920100          sts _e8266tomcu_num+1,R3
+ 032C 20920000          sts _e8266tomcu_num,R2
+ 0330                   .dbline 171
+ 0330           ;                mcuto8266_str("AT+CIPSEND\r\n");
+ 0330 00E0              ldi R16,<L47
+ 0332 10E0              ldi R17,>L47
+ 0334 0E940000          xcall _mcuto8266_str
+ 0338                   .dbline 172
+ 0338           ;                E8266state = 5;
+ 0338 85E0              ldi R24,5
+ 033A 80930500          sts L21,R24
+ 033E                   .dbline 173
+ 033E           ;         }
+ 033E                   .dbline 174
+ 033E           ;         break;
+ 033E 96C0              xjmp L24
+ 0340           L48:
+ 0340                   .dbline 176
+ 0340           ;         case 5:
+ 0340           ;         time++;
+ 0340 80910600          lds R24,L22
+ 0344 8F5F              subi R24,255    ; addi 1
+ 0346 80930600          sts L22,R24
+ 034A                   .dbline 177
+ 034A           ;         if(strstr(e8266tomcu_str,">")!=0){
+ 034A 20E0              ldi R18,<L51
+ 034C 30E0              ldi R19,>L51
+ 034E 00E0              ldi R16,<_e8266tomcu_str
+ 0350 10E0              ldi R17,>_e8266tomcu_str
+ 0352 0E940000          xcall _strstr
+ 0356 5801              movw R10,R16
+ 0358 0030              cpi R16,0
+ 035A 0107              cpc R16,R17
+ 035C 09F4              brne X35
+ 035E 86C0              xjmp L24
+ 0360           X35:
+ 0360           X18:
+ 0360                   .dbline 177
+ 0360                   .dbline 178
+ 0360           ;            mcutopc_str(e8266tomcu_str);
+ 0360 00E0              ldi R16,<_e8266tomcu_str
+ 0362 10E0              ldi R17,>_e8266tomcu_str
+ 0364 0E940000          xcall _mcutopc_str
+ 0368                   .dbline 179
+ 0368           ;                clearNum(e8266tomcu_str);
+ 0368 00E0              ldi R16,<_e8266tomcu_str
+ 036A 10E0              ldi R17,>_e8266tomcu_str
+ 036C E4DE              xcall _clearNum
+ 036E                   .dbline 180
+ 036E           ;                time = 0;
+ 036E 2224              clr R2
+ 0370 20920600          sts L22,R2
+ 0374                   .dbline 181
+ 0374           ;                e8266tomcu_num = 0;
+ 0374 3324              clr R3
+ 0376 30920100          sts _e8266tomcu_num+1,R3
+ 037A 20920000          sts _e8266tomcu_num,R2
+ 037E                   .dbline 182
+ 037E           ;                mcuto8266_str("XXUN3WE5D1U74ARO");  //发送设备序列号
+ 037E 00E0              ldi R16,<L52
+ 0380 10E0              ldi R17,>L52
+ 0382 0E940000          xcall _mcuto8266_str
+ 0386                   .dbline 183
+ 0386           ;                E8266state = 6;
+ 0386 86E0              ldi R24,6
+ 0388 80930500          sts L21,R24
+ 038C                   .dbline 184
+ 038C           ;                linkokflag = 1;
+ 038C 81E0              ldi R24,1
+ 038E 80930300          sts _linkokflag,R24
+ 0392                   .dbline 185
+ 0392           ;                timensflag = 0;//必须重新开始计时，否则程序不正常
+ 0392 2224              clr R2
+ 0394 20920200          sts _timensflag,R2
+ 0398                   .dbline 186
+ 0398           ;         }
+ 0398                   .dbline 187
+ 0398           ;         break;
+ 0398 69C0              xjmp L24
+ 039A           L53:
+ 039A                   .dbline 189
+ 039A           ;         case 6:
+ 039A           ;         time++;
+ 039A 80910600          lds R24,L22
+ 039E 8F5F              subi R24,255    ; addi 1
+ 03A0 80930600          sts L22,R24
+ 03A4                   .dbline 190
+ 03A4           ;         if(strstr(e8266tomcu_str,"ok")!=0){
+ 03A4 20E0              ldi R18,<L56
+ 03A6 30E0              ldi R19,>L56
+ 03A8 00E0              ldi R16,<_e8266tomcu_str
+ 03AA 10E0              ldi R17,>_e8266tomcu_str
+ 03AC 0E940000          xcall _strstr
+ 03B0 5801              movw R10,R16
+ 03B2 0030              cpi R16,0
+ 03B4 0107              cpc R16,R17
+ 03B6 79F0              breq L54
+ 03B8           X19:
+ 03B8                   .dbline 190
+ 03B8                   .dbline 192
+ 03B8           ;            //PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯
+ 03B8           ;            mcutopc_str(e8266tomcu_str);
+ 03B8 00E0              ldi R16,<_e8266tomcu_str
+ 03BA 10E0              ldi R17,>_e8266tomcu_str
+ 03BC 0E940000          xcall _mcutopc_str
+ 03C0                   .dbline 193
+ 03C0           ;                clearNum(e8266tomcu_str);
+ 03C0 00E0              ldi R16,<_e8266tomcu_str
+ 03C2 10E0              ldi R17,>_e8266tomcu_str
+ 03C4 B8DE              xcall _clearNum
+ 03C6                   .dbline 194
+ 03C6           ;                time = 0;
+ 03C6 2224              clr R2
+ 03C8 20920600          sts L22,R2
+ 03CC                   .dbline 195
+ 03CC           ;                e8266tomcu_num = 0; 
+ 03CC 3324              clr R3
+ 03CE 30920100          sts _e8266tomcu_num+1,R3
+ 03D2 20920000          sts _e8266tomcu_num,R2
+ 03D6                   .dbline 199
+ 03D6           ;                //mcuto8266_str("#50,30,70,50,1,1#");
+ 03D6           ;                //mcuto8266_str(Txto8266Buf);
+ 03D6           ;                //PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯 
+ 03D6           ;         }
+ 03D6           L54:
+ 03D6                   .dbline 200
+ 03D6           ;         if(time>30){
+ 03D6 8EE1              ldi R24,30
+ 03D8 20900600          lds R2,L22
+ 03DC 8215              cp R24,R2
+ 03DE 08F0              brlo X36
+ 03E0 45C0              xjmp L24
+ 03E2           X36:
+ 03E2           X20:
+ 03E2                   .dbline 200
+ 03E2                   .dbline 201
+ 03E2           ;            E8266state = 7; //如果超时没有接收到心跳包则进入异常处理
+ 03E2 87E0              ldi R24,7
+ 03E4 80930500          sts L21,R24
+ 03E8                   .dbline 202
+ 03E8           ;                linkokflag = 0; //连接失效
+ 03E8 2224              clr R2
+ 03EA 20920300          sts _linkokflag,R2
+ 03EE                   .dbline 203
+ 03EE           ;                time = 0;
+ 03EE 20920600          sts L22,R2
+ 03F2                   .dbline 204
+ 03F2           ;         }      
+ 03F2                   .dbline 205
+ 03F2           ;         break;
+ 03F2 3CC0              xjmp L24
+ 03F4           L59:
+ 03F4                   .dbline 207
+ 03F4           ;         case 7:
+ 03F4           ;                clearNum(e8266tomcu_str);
+ 03F4 00E0              ldi R16,<_e8266tomcu_str
+ 03F6 10E0              ldi R17,>_e8266tomcu_str
+ 03F8 9EDE              xcall _clearNum
+ 03FA                   .dbline 208
+ 03FA           ;                e8266tomcu_num = 0; 
+ 03FA 2224              clr R2
+ 03FC 3324              clr R3
+ 03FE 30920100          sts _e8266tomcu_num+1,R3
+ 0402 20920000          sts _e8266tomcu_num,R2
+ 0406                   .dbline 209
+ 0406           ;                mcuto8266_str("+++");//异常处理
+ 0406 00E0              ldi R16,<L60
+ 0408 10E0              ldi R17,>L60
+ 040A 0E940000          xcall _mcuto8266_str
+ 040E                   .dbline 210
+ 040E           ;                delay(2000);
+ 040E 00ED              ldi R16,2000
+ 0410 17E0              ldi R17,7
+ 0412 F6DD              xcall _delay
+ 0414                   .dbline 212
+ 0414           ;                //mcutopc_str("\r\n");//异常处理
+ 0414           ;                mcuto8266_str("AT\r\n");//异常处理
+ 0414 00E0              ldi R16,<L61
+ 0416 10E0              ldi R17,>L61
+ 0418 0E940000          xcall _mcuto8266_str
+ 041C                   .dbline 213
+ 041C           ;                E8266state = 8;
+ 041C 88E0              ldi R24,8
+ 041E 80930500          sts L21,R24
+ 0422                   .dbline 214
+ 0422           ;         break;
+ 0422 24C0              xjmp L24
+ 0424           L62:
+ 0424                   .dbline 216
+ 0424           ;         case 8:
+ 0424           ;                if(strstr(e8266tomcu_str,"OK")!=0){
+ 0424 20E0              ldi R18,<L34
+ 0426 30E0              ldi R19,>L34
+ 0428 00E0              ldi R16,<_e8266tomcu_str
+ 042A 10E0              ldi R17,>_e8266tomcu_str
+ 042C 0E940000          xcall _strstr
+ 0430 5801              movw R10,R16
+ 0432 0030              cpi R16,0
+ 0434 0107              cpc R16,R17
+ 0436 B9F0              breq L63
+ 0438           X21:
+ 0438                   .dbline 216
+ 0438                   .dbline 217
+ 0438           ;              mcutopc_str(e8266tomcu_str);
+ 0438 00E0              ldi R16,<_e8266tomcu_str
+ 043A 10E0              ldi R17,>_e8266tomcu_str
+ 043C 0E940000          xcall _mcutopc_str
+ 0440                   .dbline 218
+ 0440           ;              clearNum(e8266tomcu_str);
+ 0440 00E0              ldi R16,<_e8266tomcu_str
+ 0442 10E0              ldi R17,>_e8266tomcu_str
+ 0444 78DE              xcall _clearNum
+ 0446                   .dbline 219
+ 0446           ;                  time = 0;
+ 0446 2224              clr R2
+ 0448 20920600          sts L22,R2
+ 044C                   .dbline 220
+ 044C           ;                  e8266tomcu_num = 0;
+ 044C 3324              clr R3
+ 044E 30920100          sts _e8266tomcu_num+1,R3
+ 0452 20920000          sts _e8266tomcu_num,R2
+ 0456                   .dbline 221
+ 0456           ;                  mcuto8266_str("AT+CWMODE=1\r\n");
+ 0456 00E0              ldi R16,<L30
+ 0458 10E0              ldi R17,>L30
+ 045A 0E940000          xcall _mcuto8266_str
+ 045E                   .dbline 222
+ 045E           ;              E8266state = 1;
+ 045E 81E0              ldi R24,1
+ 0460 80930500          sts L21,R24
+ 0464                   .dbline 223
+ 0464           ;            }
+ 0464 03C0              xjmp L24
+ 0466           L63:
+ 0466                   .dbline 225
+ 0466           ;                else
+ 0466           ;                  E8266state = 7;
+ 0466 87E0              ldi R24,7
+ 0468 80930500          sts L21,R24
+ 046C                   .dbline 226
+ 046C           ;         break;
+ 046C           L23:
+ 046C           L24:
+ 046C                   .dbline 229
+ 046C           ;         
+ 046C           ;     }
+ 046C           ;       return 1;
+ 046C 01E0              ldi R16,1
+ 046E                   .dbline -2
+ 046E           L20:
+ 046E                   .dbline 0 ; func end
+ 046E 0C940000          xjmp pop_xgset300C
+ 0472                   .dbend
+ 0472                   .dbfunc e main _main fI
+ 0472           ;            Num -> <dead>
+ 0472           ;              i -> <dead>
+                        .even
+ 0472           _main::
+ 0472                   .dbline -1
+ 0472                   .dbline 233
+ 0472           ; }
+ 0472           ; 
+ 0472           ; int main(void)
+ 0472           ; {
+ 0472                   .dbline 235
+ 0472           ;     unsigned char i,Num;
+ 0472           ;       init_devices();
+ 0472 4ADE              xcall _init_devices
+ 0474 21C0              xjmp L67
+ 0476           L66:
+ 0476                   .dbline 237
+ 0476           ;       while(1)
+ 0476           ;     {
+ 0476                   .dbline 238
+ 0476           ;        if(time1sflag == 1){   //上电初始化8266连接服务器，然后每1秒检测有无心跳包
+ 0476 80910100          lds R24,_time1sflag
+ 047A 8130              cpi R24,1
+ 047C 71F4              brne L69
+ 047E           X37:
+ 047E                   .dbline 238
+ 047E                   .dbline 239
+ 047E           ;             E8266inittotlink();
+ 047E 6EDE              xcall _E8266inittotlink
+ 0480                   .dbline 240
+ 0480           ;                 if(linkokflag == 1)PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯
+ 0480 80910300          lds R24,_linkokflag
+ 0484 8130              cpi R24,1
+ 0486 31F4              brne L71
+ 0488           X38:
+ 0488                   .dbline 240
+ 0488 81E0              ldi R24,1
+ 048A 20906500          lds R2,101
+ 048E 2826              eor R2,R24
+ 0490 20926500          sts 101,R2
+ 0494           L71:
+ 0494                   .dbline 241
+ 0494           ;                 time1sflag = 0;
+ 0494 2224              clr R2
+ 0496 20920100          sts _time1sflag,R2
+ 049A                   .dbline 272
+ 049A           ;                 //////////////////////每1秒更新数据，测试用//////////////////////////
+ 049A           ;                 /*
+ 049A           ;                 if((PING&(1<<2))== 0) i = 0+48;
+ 049A           ;                 else i = 1+48;
+ 049A           ;             //if(timensflag == 1){  
+ 049A           ;                   Num++;
+ 049A           ;                   if(Num==99) Num = 1;
+ 049A           ;                       Txto8266Buf[0] = '#';
+ 049A           ;                       Txto8266Buf[1] = Num/10+48;
+ 049A           ;                       Txto8266Buf[2] = Num%10+48;
+ 049A           ;                       Txto8266Buf[3] = ',';
+ 049A           ;                       //Txto8266Buf[4] = Num/10+48;
+ 049A           ;                       //Txto8266Buf[5] = Num%10+48;
+ 049A           ;                       Txto8266Buf[6] = ',';
+ 049A           ;                       //Txto8266Buf[7] = Num/10+48;
+ 049A           ;                       //Txto8266Buf[8] = Num%10+48;
+ 049A           ;                       Txto8266Buf[9] = ',';
+ 049A           ;                       //Txto8266Buf[10] = Num/10+48;
+ 049A           ;                       //Txto8266Buf[11] = Num%10+48;
+ 049A           ;                       Txto8266Buf[12] = ',';
+ 049A           ;                       Txto8266Buf[13] = i;
+ 049A           ;                       Txto8266Buf[14] = ',';
+ 049A           ;                       
+ 049A           ;                       if((PING&(1<<3))== 0) i = 0+48;
+ 049A           ;                   else i = 1+48;
+ 049A           ;                       
+ 049A           ;                       Txto8266Buf[15] = i;
+ 049A           ;                       //Txto8266Buf[16] = '#';
+ 049A           ;                       //Txto8266Buf[17] = '\0';*/
+ 049A           ;             ////////////////////////////测试代码结束///////////////////////      
+ 049A           ;          }
+ 049A           L69:
+ 049A                   .dbline 273
+ 049A           ;          if((timensflag == 1)&&(linkokflag == 1)){
+ 049A 80910200          lds R24,_timensflag
+ 049E 8130              cpi R24,1
+ 04A0 59F4              brne L73
+ 04A2           X39:
+ 04A2 80910300          lds R24,_linkokflag
+ 04A6 8130              cpi R24,1
+ 04A8 39F4              brne L73
+ 04AA           X40:
+ 04AA                   .dbline 273
+ 04AA                   .dbline 274
+ 04AA           ;             mcuto8266_str(Txto8266Buf);  //每n秒上传一次数据
+ 04AA 00E0              ldi R16,<_Txto8266Buf
+ 04AC 10E0              ldi R17,>_Txto8266Buf
+ 04AE 0E940000          xcall _mcuto8266_str
+ 04B2                   .dbline 275
+ 04B2           ;             timensflag = 0;
+ 04B2 2224              clr R2
+ 04B4 20920200          sts _timensflag,R2
+ 04B8                   .dbline 276
+ 04B8           ;          }      
+ 04B8           L73:
+ 04B8                   .dbline 277
+ 04B8           ;     }
+ 04B8           L67:
+ 04B8                   .dbline 236
+ 04B8 DECF              xjmp L66
+ 04BA           X41:
+ 04BA                   .dbline -2
+ 04BA           L65:
+ 04BA                   .dbline 0 ; func end
+ 04BA 0895              ret
+ 04BC                   .dbsym l Num 1 c
+ 04BC                   .dbsym l i 1 c
+ 04BC                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0000           _Txto8266Buf::
+ 0000                   .blkb 1024
+ 0400                   .dbsym e Txto8266Buf _Txto8266Buf A[1024:1024]c
+                        .area data(ram, con, rel)
+ 0007                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0007           L61:
+ 0007                   .blkb 5
+                        .area idata
+ 0007 41540D0A00        .byte 'A,'T,13,10,0
+                        .area data(ram, con, rel)
+ 000C                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 000C           L60:
+ 000C                   .blkb 4
+                        .area idata
+ 000C 2B2B2B00          .byte 43,43,43,0
+                        .area data(ram, con, rel)
+ 0010                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0010           L56:
+ 0010                   .blkb 3
+                        .area idata
+ 0010 6F6B00            .byte 'o,'k,0
+                        .area data(ram, con, rel)
+ 0013                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0013           L52:
+ 0013                   .blkb 17
+                        .area idata
+ 0013 5858554E33574535443155373441524F  .byte 'X,'X,'U,'N,51,'W,'E,53,'D,49,'U,55,52,'A,'R,'O
+ 0023 00                .byte 0
+                        .area data(ram, con, rel)
+ 0024                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0024           L51:
+ 0024                   .blkb 2
+                        .area idata
+ 0024 3E00              .byte 62,0
+                        .area data(ram, con, rel)
+ 0026                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0026           L47:
+ 0026                   .blkb 13
+                        .area idata
+ 0026 41542B43495053454E440D0A00        .byte 'A,'T,43,'C,'I,'P,'S,'E,'N,'D,13,10,0
+                        .area data(ram, con, rel)
+ 0033                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0033           L43:
+ 0033                   .blkb 15
+                        .area idata
+ 0033 41542B4349504D4F44453D310D0A00    .byte 'A,'T,43,'C,'I,'P,'M,'O,'D,'E,61,49,13,10,0
+                        .area data(ram, con, rel)
+ 0042                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0042           L39:
+ 0042                   .blkb 40
+                        .area idata
+ 0042 41542B43495053544152543D22544350  .byte 'A,'T,43,'C,'I,'P,'S,'T,'A,'R,'T,61,34,'T,'C,'P
+ 0052 222C227463702E746C696E6B2E696F22  .byte 34,44,34,'t,'c,'p,46,'t,'l,'i,'n,'k,46,'i,'o,34
+ 0062 2C383634370D0A00  .byte 44,56,54,52,55,13,10,0
+                        .area data(ram, con, rel)
+ 006A                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 006A           L35:
+ 006A                   .blkb 31
+                        .area idata
+ 006A 41542B43574A41503D227A7363383838  .byte 'A,'T,43,'C,'W,'J,'A,'P,61,34,'z,'s,'c,56,56,56
+ 007A 222C223133363331313033220D0A00    .byte 34,44,34,49,51,54,51,49,49,48,51,34,13,10,0
+                        .area data(ram, con, rel)
+ 0089                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 0089           L34:
+ 0089                   .blkb 3
+                        .area idata
+ 0089 4F4B00            .byte 'O,'K,0
+                        .area data(ram, con, rel)
+ 008C                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 008C           L30:
+ 008C                   .blkb 14
+                        .area idata
+ 008C 41542B43574D4F44453D310D0A00      .byte 'A,'T,43,'C,'W,'M,'O,'D,'E,61,49,13,10,0
+                        .area data(ram, con, rel)
+ 009A                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 009A           L29:
+ 009A                   .blkb 6
+                        .area idata
+ 009A 726561647900      .byte 'r,'e,'a,'d,'y,0
+                        .area data(ram, con, rel)
+ 00A0                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+ 00A0           ;     return 0;
+ 00A0           ; }
+ 00A0           ; 

@@ -1,0 +1,115 @@
+// Crystal: 16.000Mhz
+
+#include <iom64v.h>
+#include <macros.h>
+#include <string.h>
+#include "uart.h"
+
+
+ int pctomcu_num=0,q=0;
+ unsigned char pctomcu_str[1024];
+ unsigned char str1[1024];
+//UART0 initialize
+// desired baud rate: 9600
+// actual: baud rate:9615 (0.2%)
+// char size: 8 bit
+// parity: Disabled
+void uart0_init(void)//连接电脑
+{
+ UCSR0B = 0x00; //disable while setting baud rate
+ UCSR0A = 0x00;
+ UCSR0C = 0x06;
+ UBRR0L = 0x67; //set baud rate lo
+ UBRR0H = 0x00; //set baud rate hi
+ UCSR0B = 0x98;
+}
+
+//UART1 initialize
+// desired baud rate:9600
+// actual baud rate:9615 (0.2%)
+// char size: 8 bit
+// parity: Disabled
+void uart1_init(void)//连接8266
+{
+ UCSR1B = 0x00; //disable while setting baud rate
+ UCSR1A = 0x00;
+ UCSR1C = 0x06;
+ UBRR1L = 0x67; //set baud rate lo
+ UBRR1H = 0x00; //set baud rate hi
+ UCSR1B = 0x98;
+}
+
+#pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+void uart0_rx_isr(void)  //接收电脑发来的数据
+{
+ //uart has received a character in UDR
+   unsigned char data;
+   int i;
+   data=UDR0;
+   pctomcu_str[pctomcu_num]=data;
+   if(pctomcu_str[pctomcu_num]=='\0')//接收完电脑发过来的数据
+   {
+      mcuto8266(pctomcu_str);    //从电脑接收来的数据发给8266
+      for(i=0;i<pctomcu_num;i++)
+      {
+  	    pctomcu_str[i]=0;
+      }
+      pctomcu_num=0;
+   }
+   pctomcu_num++;
+}
+
+
+
+//unsigned char buf[1024];//////////
+#pragma interrupt_handler uart1_rx_isr:iv_USART1_RXC
+void uart1_rx_isr(void)
+{
+ //uart has received a character in UDR
+ unsigned char data;
+ int k;
+ data = UDR1;
+ str1[q]=data;
+ q++;
+ if(str1[q]=='\0')
+ {
+ PrintString(str1);
+ for(k=0;k<q;k++)
+ {
+  	str1[k]=0;
+ }
+ q=0;
+ }
+}
+
+//串口0  连接电脑
+void mcutopcSendByte0(unsigned char data)
+{
+   UDR0 = data;
+   while(!(UCSR0A&(1<<5)));
+}
+
+void mcutopc_str(unsigned char *pstr)
+{
+   while(*pstr)
+   {	  
+      mcutopcSendByte0(*pstr);
+      pstr++;
+   }
+}
+
+//串口1  连接8266
+void mcuto8266SendByte(unsigned char data)
+{
+   UDR1 = data;
+   while(!(UCSR1A&(1<<5)));
+}
+
+void mcuto8266_str(unsigned char *pstr)
+{
+   while(*pstr)
+   {	  
+      mcuto8266SendByte(*pstr);
+      pstr++;
+   }
+}

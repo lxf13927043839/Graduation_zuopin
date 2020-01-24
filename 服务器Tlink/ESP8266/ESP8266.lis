@@ -1,0 +1,155 @@
+                        .module ESP8266.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\ESP8266.c
+ 0000                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\ESP8266.c
+ 0000                   .dbfunc e espdelay _espdelay fV
+ 0000           ;              i -> R16,R17
+                        .even
+ 0000           _espdelay::
+ 0000                   .dbline -1
+ 0000                   .dbline 6
+ 0000           ; #include <iom64v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; #include "ESP8266.h"
+ 0000           ; 
+ 0000           ; void espdelay(void)
+ 0000           ; {
+ 0000                   .dbline 8
+ 0000           ;   int i;
+ 0000           ;   for(i=0;i<2000;i++)
+ 0000 0027              clr R16
+ 0002 1127              clr R17
+ 0004           L2:
+ 0004                   .dbline 9
+ 0004           ;   {
+ 0004                   .dbline 10
+ 0004           ;     NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 0004 0000              nop
+ 0006                   .dbline 10
+ 0006 0000              nop
+ 0008                   .dbline 10
+ 0008 0000              nop
+ 000A                   .dbline 10
+ 000A 0000              nop
+ 000C                   .dbline 10
+ 000C 0000              nop
+ 000E                   .dbline 10
+ 000E 0000              nop
+ 0010                   .dbline 10
+ 0010 0000              nop
+ 0012                   .dbline 10
+ 0012 0000              nop
+ 0014                   .dbline 11
+ 0014           ;       NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 0014 0000              nop
+ 0016                   .dbline 11
+ 0016 0000              nop
+ 0018                   .dbline 11
+ 0018 0000              nop
+ 001A                   .dbline 11
+ 001A 0000              nop
+ 001C                   .dbline 11
+ 001C 0000              nop
+ 001E                   .dbline 11
+ 001E 0000              nop
+ 0020                   .dbline 11
+ 0020 0000              nop
+ 0022                   .dbline 11
+ 0022 0000              nop
+ 0024                   .dbline 12
+ 0024           ;   }
+ 0024           L3:
+ 0024                   .dbline 8
+ 0024 0F5F              subi R16,255  ; offset = 1
+ 0026 1F4F              sbci R17,255
+ 0028                   .dbline 8
+ 0028 003D              cpi R16,208
+ 002A E7E0              ldi R30,7
+ 002C 1E07              cpc R17,R30
+ 002E 54F3              brlt L2
+ 0030           X0:
+ 0030                   .dbline -2
+ 0030           L1:
+ 0030                   .dbline 0 ; func end
+ 0030 0895              ret
+ 0032                   .dbsym r i 16 I
+ 0032                   .dbend
+ 0032                   .dbfunc e ESPSendByte _ESPSendByte fV
+ 0032           ;           data -> R10
+                        .even
+ 0032           _ESPSendByte::
+ 0032 AA92              st -y,R10
+ 0034 A02E              mov R10,R16
+ 0036                   .dbline -1
+ 0036                   .dbline 16
+ 0036           ; }
+ 0036           ; 
+ 0036           ; void ESPSendByte(unsigned char data)
+ 0036           ; {
+ 0036                   .dbline 17
+ 0036           ;    UDR1 = data;
+ 0036 A0929C00          sts 156,R10
+ 003A           L7:
+ 003A                   .dbline 18
+ 003A           ;    while(!(UCSR1A&(1<<5)));
+ 003A           L8:
+ 003A                   .dbline 18
+ 003A 20909B00          lds R2,155
+ 003E 25FE              sbrs R2,5
+ 0040 FCCF              rjmp L7
+ 0042           X1:
+ 0042                   .dbline 19
+ 0042           ;    espdelay();
+ 0042 DEDF              xcall _espdelay
+ 0044                   .dbline -2
+ 0044           L6:
+ 0044                   .dbline 0 ; func end
+ 0044 A990              ld R10,y+
+ 0046 0895              ret
+ 0048                   .dbsym r data 10 c
+ 0048                   .dbend
+ 0048                   .dbfunc e ESPSendString _ESPSendString fV
+ 0048           ;           pstr -> R20,R21
+                        .even
+ 0048           _ESPSendString::
+ 0048 4A93              st -y,R20
+ 004A 5A93              st -y,R21
+ 004C A801              movw R20,R16
+ 004E                   .dbline -1
+ 004E                   .dbline 23
+ 004E           ; }
+ 004E           ; 
+ 004E           ; void ESPSendString(unsigned char *pstr)
+ 004E           ; {
+ 004E 05C0              xjmp L12
+ 0050           L11:
+ 0050                   .dbline 25
+ 0050           ;    while(*pstr)
+ 0050           ;    {    
+ 0050                   .dbline 26
+ 0050           ;       ESPSendByte(*pstr);
+ 0050 FA01              movw R30,R20
+ 0052 0081              ldd R16,z+0
+ 0054 EEDF              xcall _ESPSendByte
+ 0056                   .dbline 27
+ 0056           ;       pstr++;
+ 0056 4F5F              subi R20,255  ; offset = 1
+ 0058 5F4F              sbci R21,255
+ 005A                   .dbline 28
+ 005A           ;    }
+ 005A           L12:
+ 005A                   .dbline 24
+ 005A FA01              movw R30,R20
+ 005C 2080              ldd R2,z+0
+ 005E 2220              tst R2
+ 0060 B9F7              brne L11
+ 0062           X2:
+ 0062                   .dbline -2
+ 0062           L10:
+ 0062                   .dbline 0 ; func end
+ 0062 5991              ld R21,y+
+ 0064 4991              ld R20,y+
+ 0066 0895              ret
+ 0068                   .dbsym r pstr 20 pc
+ 0068                   .dbend
+ 0068           ; }

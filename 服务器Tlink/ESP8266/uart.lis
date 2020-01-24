@@ -1,0 +1,596 @@
+                        .module uart.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0000           _espbufcount::
+ 0000                   .blkb 4
+                        .area idata
+ 0000 00000000          .word 0,0
+                        .area data(ram, con, rel)
+ 0004                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0004                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0004                   .dbsym e espbufcount _espbufcount l
+ 0004           _esplineflag::
+ 0004                   .blkb 1
+                        .area idata
+ 0004 00                .byte 0
+                        .area data(ram, con, rel)
+ 0005                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0005                   .dbsym e esplineflag _esplineflag c
+ 0005           _j::
+ 0005                   .blkb 2
+                        .area idata
+ 0005 0000              .word 0
+                        .area data(ram, con, rel)
+ 0007                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0007                   .dbsym e j _j I
+ 0007           _q::
+ 0007                   .blkb 2
+                        .area idata
+ 0007 0000              .word 0
+                        .area data(ram, con, rel)
+ 0009                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0009                   .dbsym e q _q I
+                        .area text(rom, con, rel)
+ 0000                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0000                   .dbfunc e uart0_init _uart0_init fV
+                        .even
+ 0000           _uart0_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 20
+ 0000           ; // Crystal: 16.000Mhz
+ 0000           ; 
+ 0000           ; #include <iom64v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; #include <string.h>
+ 0000           ; #include "uart.h"
+ 0000           ; 
+ 0000           ; //unsigned char espbuf[1024];
+ 0000           ; unsigned long espbufcount = 0;
+ 0000           ; unsigned char esplineflag = 0;
+ 0000           ;  int j=0,q=0;
+ 0000           ;  unsigned char str[1024];
+ 0000           ;  unsigned char str1[1024];
+ 0000           ; //UART0 initialize
+ 0000           ; // desired baud rate: 9600
+ 0000           ; // actual: baud rate:9615 (0.2%)
+ 0000           ; // char size: 8 bit
+ 0000           ; // parity: Disabled
+ 0000           ; void uart0_init(void)//连接电脑
+ 0000           ; {
+ 0000                   .dbline 21
+ 0000           ;  UCSR0B = 0x00; //disable while setting baud rate
+ 0000 2224              clr R2
+ 0002 2AB8              out 0xa,R2
+ 0004                   .dbline 22
+ 0004           ;  UCSR0A = 0x00;
+ 0004 2BB8              out 0xb,R2
+ 0006                   .dbline 23
+ 0006           ;  UCSR0C = 0x06;
+ 0006 86E0              ldi R24,6
+ 0008 80939500          sts 149,R24
+ 000C                   .dbline 24
+ 000C           ;  UBRR0L = 0x67; //set baud rate lo
+ 000C 87E6              ldi R24,103
+ 000E 89B9              out 0x9,R24
+ 0010                   .dbline 25
+ 0010           ;  UBRR0H = 0x00; //set baud rate hi
+ 0010 20929000          sts 144,R2
+ 0014                   .dbline 26
+ 0014           ;  UCSR0B = 0x98;
+ 0014 88E9              ldi R24,152
+ 0016 8AB9              out 0xa,R24
+ 0018                   .dbline -2
+ 0018           L1:
+ 0018                   .dbline 0 ; func end
+ 0018 0895              ret
+ 001A                   .dbend
+                        .area vector(rom, abs)
+                        .org 72
+ 0048 0C940D00          jmp _uart0_rx_isr
+                        .area text(rom, con, rel)
+ 001A                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 001A                   .dbfunc e uart0_rx_isr _uart0_rx_isr fV
+ 001A           ;              i -> <dead>
+ 001A           ;           data -> R10
+ 001A           ;              k -> R20,R21
+                        .even
+ 001A           _uart0_rx_isr::
+ 001A 0A92              st -y,R0
+ 001C 1A92              st -y,R1
+ 001E 2A92              st -y,R2
+ 0020 3A92              st -y,R3
+ 0022 4A92              st -y,R4
+ 0024 5A92              st -y,R5
+ 0026 6A92              st -y,R6
+ 0028 7A92              st -y,R7
+ 002A 8A92              st -y,R8
+ 002C 9A92              st -y,R9
+ 002E 0A93              st -y,R16
+ 0030 1A93              st -y,R17
+ 0032 2A93              st -y,R18
+ 0034 3A93              st -y,R19
+ 0036 8A93              st -y,R24
+ 0038 9A93              st -y,R25
+ 003A AA93              st -y,R26
+ 003C BA93              st -y,R27
+ 003E EA93              st -y,R30
+ 0040 FA93              st -y,R31
+ 0042 0FB6              IN R0,63
+ 0044 0A92              st -y,R0
+ 0046 0E940000          xcall push_xgset300C
+ 004A                   .dbline -1
+ 004A                   .dbline 31
+ 004A           ; }
+ 004A           ; 
+ 004A           ; #pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+ 004A           ; void uart0_rx_isr(void)
+ 004A           ; {
+ 004A                   .dbline 35
+ 004A           ;  //uart has received a character in UDR
+ 004A           ;  unsigned char data;
+ 004A           ;  int k,i;
+ 004A           ;  data=UDR0;
+ 004A ACB0              in R10,0xc
+ 004C                   .dbline 36
+ 004C           ;  str[j]=data;
+ 004C 80E0              ldi R24,<_str
+ 004E 90E0              ldi R25,>_str
+ 0050 E0910500          lds R30,_j
+ 0054 F0910600          lds R31,_j+1
+ 0058 E80F              add R30,R24
+ 005A F91F              adc R31,R25
+ 005C A082              std z+0,R10
+ 005E                   .dbline 37
+ 005E           ;  j++;
+ 005E 80910500          lds R24,_j
+ 0062 90910600          lds R25,_j+1
+ 0066 0196              adiw R24,1
+ 0068 90930600          sts _j+1,R25
+ 006C 80930500          sts _j,R24
+ 0070                   .dbline 38
+ 0070           ;  if(str[j]=='\0')
+ 0070 80E0              ldi R24,<_str
+ 0072 90E0              ldi R25,>_str
+ 0074 E0910500          lds R30,_j
+ 0078 F0910600          lds R31,_j+1
+ 007C E80F              add R30,R24
+ 007E F91F              adc R31,R25
+ 0080 2080              ldd R2,z+0
+ 0082 2220              tst R2
+ 0084 E1F4              brne L3
+ 0086           X0:
+ 0086                   .dbline 39
+ 0086           ;  {
+ 0086                   .dbline 40
+ 0086           ;  PrintString1(str);
+ 0086 00E0              ldi R16,<_str
+ 0088 10E0              ldi R17,>_str
+ 008A CAD0              xcall _PrintString1
+ 008C                   .dbline 41
+ 008C           ;  for(k=0;k<j;k++)
+ 008C 4427              clr R20
+ 008E 5527              clr R21
+ 0090 09C0              xjmp L8
+ 0092           L5:
+ 0092                   .dbline 42
+ 0092           ;  {
+ 0092                   .dbline 43
+ 0092           ;       str[k]=0;
+ 0092 80E0              ldi R24,<_str
+ 0094 90E0              ldi R25,>_str
+ 0096 FA01              movw R30,R20
+ 0098 E80F              add R30,R24
+ 009A F91F              adc R31,R25
+ 009C 2224              clr R2
+ 009E 2082              std z+0,R2
+ 00A0                   .dbline 44
+ 00A0           ;  }
+ 00A0           L6:
+ 00A0                   .dbline 41
+ 00A0 4F5F              subi R20,255  ; offset = 1
+ 00A2 5F4F              sbci R21,255
+ 00A4           L8:
+ 00A4                   .dbline 41
+ 00A4 20900500          lds R2,_j
+ 00A8 30900600          lds R3,_j+1
+ 00AC 4215              cp R20,R2
+ 00AE 5305              cpc R21,R3
+ 00B0 84F3              brlt L5
+ 00B2           X1:
+ 00B2                   .dbline 45
+ 00B2           ;  j=0;
+ 00B2 2224              clr R2
+ 00B4 3324              clr R3
+ 00B6 30920600          sts _j+1,R3
+ 00BA 20920500          sts _j,R2
+ 00BE                   .dbline 46
+ 00BE           ;  }
+ 00BE           L3:
+ 00BE                   .dbline -2
+ 00BE           L2:
+ 00BE                   .dbline 0 ; func end
+ 00BE 0E940000          xcall pop_xgset300C
+ 00C2 0990              ld R0,y+
+ 00C4 0FBE              OUT 63,R0
+ 00C6 F991              ld R31,y+
+ 00C8 E991              ld R30,y+
+ 00CA B991              ld R27,y+
+ 00CC A991              ld R26,y+
+ 00CE 9991              ld R25,y+
+ 00D0 8991              ld R24,y+
+ 00D2 3991              ld R19,y+
+ 00D4 2991              ld R18,y+
+ 00D6 1991              ld R17,y+
+ 00D8 0991              ld R16,y+
+ 00DA 9990              ld R9,y+
+ 00DC 8990              ld R8,y+
+ 00DE 7990              ld R7,y+
+ 00E0 6990              ld R6,y+
+ 00E2 5990              ld R5,y+
+ 00E4 4990              ld R4,y+
+ 00E6 3990              ld R3,y+
+ 00E8 2990              ld R2,y+
+ 00EA 1990              ld R1,y+
+ 00EC 0990              ld R0,y+
+ 00EE 1895              reti
+ 00F0                   .dbsym l i 1 I
+ 00F0                   .dbsym r data 10 c
+ 00F0                   .dbsym r k 20 I
+ 00F0                   .dbend
+ 00F0                   .dbfunc e uart1_init _uart1_init fV
+                        .even
+ 00F0           _uart1_init::
+ 00F0                   .dbline -1
+ 00F0                   .dbline 55
+ 00F0           ; }
+ 00F0           ; 
+ 00F0           ; //UART1 initialize
+ 00F0           ; // desired baud rate:9600
+ 00F0           ; // actual baud rate:9615 (0.2%)
+ 00F0           ; // char size: 8 bit
+ 00F0           ; // parity: Disabled
+ 00F0           ; void uart1_init(void)
+ 00F0           ; {
+ 00F0                   .dbline 56
+ 00F0           ;  UCSR1B = 0x00; //disable while setting baud rate
+ 00F0 2224              clr R2
+ 00F2 20929A00          sts 154,R2
+ 00F6                   .dbline 57
+ 00F6           ;  UCSR1A = 0x00;
+ 00F6 20929B00          sts 155,R2
+ 00FA                   .dbline 58
+ 00FA           ;  UCSR1C = 0x06;
+ 00FA 86E0              ldi R24,6
+ 00FC 80939D00          sts 157,R24
+ 0100                   .dbline 59
+ 0100           ;  UBRR1L = 0x67; //set baud rate lo
+ 0100 87E6              ldi R24,103
+ 0102 80939900          sts 153,R24
+ 0106                   .dbline 60
+ 0106           ;  UBRR1H = 0x00; //set baud rate hi
+ 0106 20929800          sts 152,R2
+ 010A                   .dbline 61
+ 010A           ;  UCSR1B = 0x98;
+ 010A 88E9              ldi R24,152
+ 010C 80939A00          sts 154,R24
+ 0110                   .dbline -2
+ 0110           L9:
+ 0110                   .dbline 0 ; func end
+ 0110 0895              ret
+ 0112                   .dbend
+                        .area vector(rom, abs)
+                        .org 120
+ 0078 0C948900          jmp _uart1_rx_isr
+                        .area text(rom, con, rel)
+ 0112                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0112                   .dbfunc e uart1_rx_isr _uart1_rx_isr fV
+ 0112           ;           data -> R10
+ 0112           ;              k -> R20,R21
+                        .even
+ 0112           _uart1_rx_isr::
+ 0112 0A92              st -y,R0
+ 0114 1A92              st -y,R1
+ 0116 2A92              st -y,R2
+ 0118 3A92              st -y,R3
+ 011A 4A92              st -y,R4
+ 011C 5A92              st -y,R5
+ 011E 6A92              st -y,R6
+ 0120 7A92              st -y,R7
+ 0122 8A92              st -y,R8
+ 0124 9A92              st -y,R9
+ 0126 0A93              st -y,R16
+ 0128 1A93              st -y,R17
+ 012A 2A93              st -y,R18
+ 012C 3A93              st -y,R19
+ 012E 8A93              st -y,R24
+ 0130 9A93              st -y,R25
+ 0132 AA93              st -y,R26
+ 0134 BA93              st -y,R27
+ 0136 EA93              st -y,R30
+ 0138 FA93              st -y,R31
+ 013A 0FB6              IN R0,63
+ 013C 0A92              st -y,R0
+ 013E 0E940000          xcall push_xgset300C
+ 0142                   .dbline -1
+ 0142                   .dbline 77
+ 0142           ; }
+ 0142           ; /*
+ 0142           ; void uart1_init(void)
+ 0142           ; {
+ 0142           ;  UCSR1B = 0x00; //disable while setting baud rate
+ 0142           ;  UCSR1A = 0x00;
+ 0142           ;  UCSR1C = 0x06;
+ 0142           ;  UBRR1L = 0x67; //set baud rate lo
+ 0142           ;  UBRR1H = 0x00; //set baud rate hi
+ 0142           ;  UCSR1B = 0x98;
+ 0142           ; }
+ 0142           ; */
+ 0142           ; //unsigned char buf[1024];//////////
+ 0142           ; #pragma interrupt_handler uart1_rx_isr:iv_USART1_RXC
+ 0142           ; void uart1_rx_isr(void)
+ 0142           ; {
+ 0142                   .dbline 81
+ 0142           ;  //uart has received a character in UDR
+ 0142           ;  unsigned char data;
+ 0142           ;  int k;
+ 0142           ;  data = UDR1;
+ 0142 A0909C00          lds R10,156
+ 0146                   .dbline 82
+ 0146           ;  str1[q]=data;
+ 0146 80E0              ldi R24,<_str1
+ 0148 90E0              ldi R25,>_str1
+ 014A E0910700          lds R30,_q
+ 014E F0910800          lds R31,_q+1
+ 0152 E80F              add R30,R24
+ 0154 F91F              adc R31,R25
+ 0156 A082              std z+0,R10
+ 0158                   .dbline 83
+ 0158           ;  q++;
+ 0158 80910700          lds R24,_q
+ 015C 90910800          lds R25,_q+1
+ 0160 0196              adiw R24,1
+ 0162 90930800          sts _q+1,R25
+ 0166 80930700          sts _q,R24
+ 016A                   .dbline 84
+ 016A           ;  if(str1[q]=='\0')
+ 016A 80E0              ldi R24,<_str1
+ 016C 90E0              ldi R25,>_str1
+ 016E E0910700          lds R30,_q
+ 0172 F0910800          lds R31,_q+1
+ 0176 E80F              add R30,R24
+ 0178 F91F              adc R31,R25
+ 017A 2080              ldd R2,z+0
+ 017C 2220              tst R2
+ 017E E1F4              brne L11
+ 0180           X2:
+ 0180                   .dbline 85
+ 0180           ;  {
+ 0180                   .dbline 86
+ 0180           ;  PrintString(str1);
+ 0180 00E0              ldi R16,<_str1
+ 0182 10E0              ldi R17,>_str1
+ 0184 36D0              xcall _PrintString
+ 0186                   .dbline 87
+ 0186           ;  for(k=0;k<q;k++)
+ 0186 4427              clr R20
+ 0188 5527              clr R21
+ 018A 09C0              xjmp L16
+ 018C           L13:
+ 018C                   .dbline 88
+ 018C           ;  {
+ 018C                   .dbline 89
+ 018C           ;       str1[k]=0;
+ 018C 80E0              ldi R24,<_str1
+ 018E 90E0              ldi R25,>_str1
+ 0190 FA01              movw R30,R20
+ 0192 E80F              add R30,R24
+ 0194 F91F              adc R31,R25
+ 0196 2224              clr R2
+ 0198 2082              std z+0,R2
+ 019A                   .dbline 90
+ 019A           ;  }
+ 019A           L14:
+ 019A                   .dbline 87
+ 019A 4F5F              subi R20,255  ; offset = 1
+ 019C 5F4F              sbci R21,255
+ 019E           L16:
+ 019E                   .dbline 87
+ 019E 20900700          lds R2,_q
+ 01A2 30900800          lds R3,_q+1
+ 01A6 4215              cp R20,R2
+ 01A8 5305              cpc R21,R3
+ 01AA 84F3              brlt L13
+ 01AC           X3:
+ 01AC                   .dbline 91
+ 01AC           ;  q=0;
+ 01AC 2224              clr R2
+ 01AE 3324              clr R3
+ 01B0 30920800          sts _q+1,R3
+ 01B4 20920700          sts _q,R2
+ 01B8                   .dbline 92
+ 01B8           ;  }
+ 01B8           L11:
+ 01B8                   .dbline -2
+ 01B8           L10:
+ 01B8                   .dbline 0 ; func end
+ 01B8 0E940000          xcall pop_xgset300C
+ 01BC 0990              ld R0,y+
+ 01BE 0FBE              OUT 63,R0
+ 01C0 F991              ld R31,y+
+ 01C2 E991              ld R30,y+
+ 01C4 B991              ld R27,y+
+ 01C6 A991              ld R26,y+
+ 01C8 9991              ld R25,y+
+ 01CA 8991              ld R24,y+
+ 01CC 3991              ld R19,y+
+ 01CE 2991              ld R18,y+
+ 01D0 1991              ld R17,y+
+ 01D2 0991              ld R16,y+
+ 01D4 9990              ld R9,y+
+ 01D6 8990              ld R8,y+
+ 01D8 7990              ld R7,y+
+ 01DA 6990              ld R6,y+
+ 01DC 5990              ld R5,y+
+ 01DE 4990              ld R4,y+
+ 01E0 3990              ld R3,y+
+ 01E2 2990              ld R2,y+
+ 01E4 1990              ld R1,y+
+ 01E6 0990              ld R0,y+
+ 01E8 1895              reti
+ 01EA                   .dbsym r data 10 c
+ 01EA                   .dbsym r k 20 I
+ 01EA                   .dbend
+ 01EA                   .dbfunc e UartSendByte _UartSendByte fV
+ 01EA           ;           data -> R16
+                        .even
+ 01EA           _UartSendByte::
+ 01EA                   .dbline -1
+ 01EA                   .dbline 96
+ 01EA           ; }
+ 01EA           ; 
+ 01EA           ; void UartSendByte(unsigned char data)
+ 01EA           ; {
+ 01EA                   .dbline 97
+ 01EA           ;    UDR0 = data;
+ 01EA 0CB9              out 0xc,R16
+ 01EC           L18:
+ 01EC                   .dbline 98
+ 01EC           ;    while(!(UCSR0A&(1<<5)));
+ 01EC           L19:
+ 01EC                   .dbline 98
+ 01EC 5D9B              sbis 0xb,5
+ 01EE FECF              rjmp L18
+ 01F0           X4:
+ 01F0                   .dbline -2
+ 01F0           L17:
+ 01F0                   .dbline 0 ; func end
+ 01F0 0895              ret
+ 01F2                   .dbsym r data 16 c
+ 01F2                   .dbend
+ 01F2                   .dbfunc e PrintString _PrintString fV
+ 01F2           ;           pstr -> R20,R21
+                        .even
+ 01F2           _PrintString::
+ 01F2 4A93              st -y,R20
+ 01F4 5A93              st -y,R21
+ 01F6 A801              movw R20,R16
+ 01F8                   .dbline -1
+ 01F8                   .dbline 102
+ 01F8           ; }
+ 01F8           ; 
+ 01F8           ; void PrintString(unsigned char *pstr)
+ 01F8           ; {
+ 01F8 05C0              xjmp L23
+ 01FA           L22:
+ 01FA                   .dbline 104
+ 01FA           ;    while(*pstr)
+ 01FA           ;    {    
+ 01FA                   .dbline 105
+ 01FA           ;       UartSendByte(*pstr);
+ 01FA FA01              movw R30,R20
+ 01FC 0081              ldd R16,z+0
+ 01FE F5DF              xcall _UartSendByte
+ 0200                   .dbline 106
+ 0200           ;       pstr++;
+ 0200 4F5F              subi R20,255  ; offset = 1
+ 0202 5F4F              sbci R21,255
+ 0204                   .dbline 107
+ 0204           ;    }
+ 0204           L23:
+ 0204                   .dbline 103
+ 0204 FA01              movw R30,R20
+ 0206 2080              ldd R2,z+0
+ 0208 2220              tst R2
+ 020A B9F7              brne L22
+ 020C           X5:
+ 020C                   .dbline -2
+ 020C           L21:
+ 020C                   .dbline 0 ; func end
+ 020C 5991              ld R21,y+
+ 020E 4991              ld R20,y+
+ 0210 0895              ret
+ 0212                   .dbsym r pstr 20 pc
+ 0212                   .dbend
+ 0212                   .dbfunc e UartSendByte1 _UartSendByte1 fV
+ 0212           ;           data -> R16
+                        .even
+ 0212           _UartSendByte1::
+ 0212                   .dbline -1
+ 0212                   .dbline 111
+ 0212           ; }
+ 0212           ; 
+ 0212           ; void UartSendByte1(unsigned char data)
+ 0212           ; {
+ 0212                   .dbline 112
+ 0212           ;    UDR1 = data;
+ 0212 00939C00          sts 156,R16
+ 0216           L26:
+ 0216                   .dbline 113
+ 0216           ;    while(!(UCSR1A&(1<<5)));
+ 0216           L27:
+ 0216                   .dbline 113
+ 0216 20909B00          lds R2,155
+ 021A 25FE              sbrs R2,5
+ 021C FCCF              rjmp L26
+ 021E           X6:
+ 021E                   .dbline -2
+ 021E           L25:
+ 021E                   .dbline 0 ; func end
+ 021E 0895              ret
+ 0220                   .dbsym r data 16 c
+ 0220                   .dbend
+ 0220                   .dbfunc e PrintString1 _PrintString1 fV
+ 0220           ;           pstr -> R20,R21
+                        .even
+ 0220           _PrintString1::
+ 0220 4A93              st -y,R20
+ 0222 5A93              st -y,R21
+ 0224 A801              movw R20,R16
+ 0226                   .dbline -1
+ 0226                   .dbline 117
+ 0226           ; }
+ 0226           ; 
+ 0226           ; void PrintString1(unsigned char *pstr)
+ 0226           ; {
+ 0226 05C0              xjmp L31
+ 0228           L30:
+ 0228                   .dbline 119
+ 0228           ;    while(*pstr)
+ 0228           ;    {    
+ 0228                   .dbline 120
+ 0228           ;       UartSendByte1(*pstr);
+ 0228 FA01              movw R30,R20
+ 022A 0081              ldd R16,z+0
+ 022C F2DF              xcall _UartSendByte1
+ 022E                   .dbline 121
+ 022E           ;       pstr++;
+ 022E 4F5F              subi R20,255  ; offset = 1
+ 0230 5F4F              sbci R21,255
+ 0232                   .dbline 122
+ 0232           ;    }
+ 0232           L31:
+ 0232                   .dbline 118
+ 0232 FA01              movw R30,R20
+ 0234 2080              ldd R2,z+0
+ 0236 2220              tst R2
+ 0238 B9F7              brne L30
+ 023A           X7:
+ 023A                   .dbline -2
+ 023A           L29:
+ 023A                   .dbline 0 ; func end
+ 023A 5991              ld R21,y+
+ 023C 4991              ld R20,y+
+ 023E 0895              ret
+ 0240                   .dbsym r pstr 20 pc
+ 0240                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\uart.c
+ 0000           _str1::
+ 0000                   .blkb 1024
+ 0400                   .dbsym e str1 _str1 A[1024:1024]c
+ 0400           _str::
+ 0400                   .blkb 1024
+ 0800                   .dbsym e str _str A[1024:1024]c
+ 0800           ; }

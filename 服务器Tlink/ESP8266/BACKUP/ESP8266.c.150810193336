@@ -1,0 +1,18 @@
+#include <iom64v.h>
+#include <macros.h>
+#include "ESP8266.h"
+
+void UartSendByte(unsigned char data)
+{
+   UDR0 = data;
+   while(!(UCSR0A&(1<<5)));
+}
+
+void PrintString(unsigned char *pstr)
+{
+   while(*pstr)
+   {	  
+      UartSendByte(*pstr);
+      pstr++;
+   }
+}

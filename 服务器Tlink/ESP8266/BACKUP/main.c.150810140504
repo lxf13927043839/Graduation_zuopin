@@ -1,0 +1,87 @@
+//ICC-AVR application builder : 2015/8/10 13:48:34
+// Target : M64
+// Crystal: 16.000Mhz
+
+#include <iom64v.h>
+#include <macros.h>
+#incldue "uart.h"
+
+void port_init(void)
+{
+ PORTA = 0x00;
+ DDRA  = 0x00;
+ PORTB = 0x00;
+ DDRB  = 0x00;
+ PORTC = 0x00; //m103 output only
+ DDRC  = 0x00;
+ PORTD = 0x00;
+ DDRD  = 0x00;
+ PORTE = 0x00;
+ DDRE  = 0x00;
+ PORTF = 0x00;
+ DDRF  = 0x00;
+ PORTG = 0x00;
+ DDRG  = 0x1F;
+}
+
+//TIMER3 initialize - prescale:1024
+// WGM: 0) Normal, TOP=0xFFFF
+// desired value: 1Hz
+// actual value:  1.000Hz (0.0%)
+void timer3_init(void)
+{
+ TCCR3B = 0x00; //stop
+ TCNT3H = 0xC2; //setup
+ TCNT3L = 0xF7;
+ OCR3AH = 0x3D;
+ OCR3AL = 0x09;
+ OCR3BH = 0x3D;
+ OCR3BL = 0x09;
+ OCR3CH = 0x3D;
+ OCR3CL = 0x09;
+ ICR3H  = 0x3D;
+ ICR3L  = 0x09;
+ TCCR3A = 0x00;
+ TCCR3B = 0x05; //start Timer
+}
+
+#pragma interrupt_handler timer3_ovf_isr:iv_TIM3_OVF
+void timer3_ovf_isr(void)
+{
+ //TIMER3 has overflowed
+ TCNT3H = 0xC2; //reload counter high value
+ TCNT3L = 0xF7; //reload counter low value
+ 
+ PORTG ^= 0X01;
+}
+
+//call this routine to initialize all peripherals
+void init_devices(void)
+{
+ //stop errant interrupts until set up
+ CLI(); //disable all interrupts
+ XDIV  = 0x00; //xtal divider
+ XMCRA = 0x00; //external memory
+ port_init();
+ timer3_init();
+ uart0_init();
+ //uart1_init();
+
+ MCUCR = 0x00;
+ EICRA = 0x00; //extended ext ints
+ EICRB = 0x00; //extended ext ints
+ EIMSK = 0x00;
+ TIMSK = 0x00; //timer interrupt sources
+ ETIMSK = 0x04; //extended timer interrupt sources
+ SEI(); //re-enable interrupts
+ //all peripherals are now initialized
+}
+
+int main()
+{
+  init_devices();
+  while(1)
+  {
+    
+  }
+}

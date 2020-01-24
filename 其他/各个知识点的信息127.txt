@@ -1,0 +1,10 @@
+1、stm32时钟系统图在Foxit下的123
+2、 SystemInit()函数中设置的系统时钟大小：
+	AHB：先进高性能总线
+	APB: 外围总线	
+
+	SYSCLK（系统时钟）            =168MHz
+	AHB  总线时钟(HCLK=SYSCLK)    =168MHz
+	APB1 总线时钟(PCLK1=SYSCLK/4) =42MHz
+	APB2 总线时钟(PCLK2=SYSCLK/2) =84MHz
+	PLL  主时钟                   =168MHz

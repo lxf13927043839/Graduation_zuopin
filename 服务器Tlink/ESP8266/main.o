@@ -1,0 +1,187 @@
+XL
+H 5 areas A global symbols
+M main.c
+S _uart0_init Ref0000
+S _uart1_init Ref0000
+A text size 134 flags 0
+dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+dbfunc e delay 0 fV
+dbsym r i 14 I
+dbsym r ms 10 I
+dbline FFFFFFFF 4
+dbline D 4
+dbline 10 6
+dbline 11 6
+dbline 12 A
+dbline 13 A
+dbline 13 C
+dbline 13 E
+dbline 13 10
+dbline 13 12
+dbline 13 14
+dbline 13 16
+dbline 13 18
+dbline 14 1A
+dbline 14 1C
+dbline 14 1E
+dbline 14 20
+dbline 14 22
+dbline 14 24
+dbline 14 26
+dbline 14 28
+dbline 15 2A
+dbline 11 2A
+dbline 11 2E
+dbline 16 36
+dbline F 36
+dbline FFFFFFFE 44
+dbline 0 44
+dbfunc e port_init 4A fV
+dbline FFFFFFFF 4A
+dbline 1A 4A
+dbline 1B 4A
+dbline 1C 4E
+dbline 1D 50
+dbline 1E 52
+dbline 1F 54
+dbline 20 56
+dbline 21 58
+dbline 22 5A
+dbline 23 5C
+dbline 24 5E
+dbline 25 60
+dbline 26 64
+dbline 27 68
+dbline 28 6C
+dbline FFFFFFFE 72
+dbline 0 72
+dbfunc e timer3_init 74 fV
+dbline FFFFFFFF 74
+dbline 30 74
+dbline 31 74
+dbline 32 7A
+dbline 33 80
+dbline 34 86
+dbline 35 8C
+dbline 36 92
+dbline 37 98
+dbline 38 9E
+dbline 39 A4
+dbline 3A AA
+dbline 3B B0
+dbline 3C B6
+dbline 3D BA
+dbline FFFFFFFE C0
+dbline 0 C0
+dbfunc e timer3_ovf_isr C2 fV
+dbline FFFFFFFF CA
+dbline 42 CA
+dbline 44 CA
+dbline 45 D0
+dbline 46 D6
+dbline 47 DC
+dbline FFFFFFFE E6
+dbline 0 E6
+dbfunc e init_devices F0 fV
+dbline FFFFFFFF F0
+dbline 4C F0
+dbline 4E F0
+dbline 4F F2
+dbline 50 F6
+dbline 51 FA
+dbline 53 FC
+dbline 54 100
+dbline 56 104
+dbline 57 108
+dbline 58 10C
+dbline 59 10E
+dbline 5A 110
+dbline 5C 112
+dbline FFFFFFFE 114
+dbline 0 114
+dbfunc e main 116 fI
+dbsym l p 1 pc
+dbsym l num 4 L
+dbsym l i 0 L
+dbline FFFFFFFF 118
+dbline 61 118
+dbline 62 118
+dbline 64 122
+dbline 65 12C
+dbline 6B 12E
+dbline 7A 12E
+dbline 6A 12E
+dbline FFFFFFFE 130
+dbline 0 130
+S _main Def0116
+S _timer3_ovf_isr Def00C2
+S _port_init Def004A
+S _init_devices Def00F0
+S _delay Def0000
+S _timer3_init Def0074
+A data size 1 flags 20
+dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+dbsym e time1sflag 0 c
+S _time1sflag Def0000
+A idata size 1 flags 0
+A vector size 78 flags C
+A bss size 400 flags 20
+dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+dbsym e buf 0 A[1024:1024]c
+S _buf Def0000
+T 00 00 00
+R 00 00 02 00
+T 00 00 4A 93 5A 93 18 C0 44 27 55 27 00 00 00 00
+R 00 00 00 00
+T 0E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 1C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 2A 00 4F 5F 5F 4F 48 3E E3 E0 5E 07 54 F3 18 01
+R 00 00 00 00
+T 38 00 01 50 10 40 22 20 19 F7 33 20 09 F7 59 91
+R 00 00 00 00
+T 46 00 49 91 08 95
+R 00 00 00 00
+T 4A 00 22 24 2B BA 2A BA 28 BA 27 BA 25 BA 24 BA
+R 00 00 00 00
+T 58 00 22 BA 21 BA 23 B8 22 B8 20 92 62 00 20 92
+R 00 00 00 00
+T 66 00 61 00 20 92 65 00 8F E1 80 93 64 00 08 95
+R 00 00 00 00
+T 74 00 22 24 20 92 8A 00 82 EC 80 93 89 00 87 EF
+R 00 00 00 00
+T 82 00 80 93 88 00 8D E3 80 93 87 00 89 E0 80 93
+R 00 00 00 00
+T 90 00 86 00 8D E3 80 93 85 00 89 E0 80 93 84 00
+R 00 00 00 00
+T 9E 00 8D E3 80 93 83 00 89 E0 80 93 82 00 8D E3
+R 00 00 00 00
+T AC 00 80 93 81 00 89 E0 80 93 80 00 20 92 8B 00
+R 00 00 00 00
+T BA 00 85 E0 80 93 8A 00 08 95
+R 00 00 00 00
+T 74 00 0C 94 61 00
+R 00 00 03 00 10 04 00 00
+T C2 00 2A 92 8A 93 2F B6 2A 92 82 EC 80 93 89 00
+R 00 00 00 00
+T D0 00 87 EF 80 93 88 00 81 E0 80 93 00 00 20 90
+R 00 00 00 00 00 0C 01 00
+T DE 00 65 00 28 26 20 92 65 00 29 90 2F BE 89 91
+R 00 00 00 00
+T EC 00 29 90 18 95
+R 00 00 00 00
+T F0 00 F8 94 22 24 2C BE 20 92 6D 00 A7 DF
+R 00 00 00 00
+T FC 00 0E 94 00 00 0E 94 00 00 22 24 25 BE 20 92
+R 00 00 00 00 12 04 00 00 12 08 01 00
+T 0A 01 6A 00 2A BE 29 BE 27 BE 78 94 08 95
+R 00 00 00 00
+T 16 01 28 97 80 E0 88 83 89 83 8A 83 8B 83 80 E0
+R 00 00 00 00
+T 24 01 8C 83 8D 83 8E 83 8F 83 E1 DF FF CF 28 96
+R 00 00 00 00
+T 32 01 08 95
+R 00 00 00 00

@@ -1,0 +1,75 @@
+XL
+H 1 areas 3 global symbols
+M ESP8266.c
+A text size 68 flags 0
+dbfile ..\..\..\7无线~1\5ESP82~1\ESP8266\source\ESP8266.c
+dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\5ESP82~1\ESP8266\source\ESP8266.c
+dbfunc e espdelay 0 fV
+dbsym r i 10 I
+dbline FFFFFFFF 0
+dbline 6 0
+dbline 8 0
+dbline 9 4
+dbline A 4
+dbline A 6
+dbline A 8
+dbline A A
+dbline A C
+dbline A E
+dbline A 10
+dbline A 12
+dbline B 14
+dbline B 16
+dbline B 18
+dbline B 1A
+dbline B 1C
+dbline B 1E
+dbline B 20
+dbline B 22
+dbline C 24
+dbline 8 24
+dbline 8 28
+dbline FFFFFFFE 30
+dbline 0 30
+dbfunc e ESPSendByte 32 fV
+dbsym r data A c
+dbline FFFFFFFF 36
+dbline 10 36
+dbline 11 36
+dbline 12 3A
+dbline 12 3A
+dbline 13 42
+dbline FFFFFFFE 44
+dbline 0 44
+dbfunc e ESPSendString 48 fV
+dbsym r pstr 14 pc
+dbline FFFFFFFF 4E
+dbline 17 4E
+dbline 19 50
+dbline 1A 50
+dbline 1B 56
+dbline 1C 5A
+dbline 18 5A
+dbline FFFFFFFE 62
+dbline 0 62
+S _ESPSendString Def0048
+S _ESPSendByte Def0032
+S _espdelay Def0000
+T 00 00 00 27 11 27 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 0E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 1C 00 00 00 00 00 00 00 00 00 0F 5F 1F 4F 00 3D
+R 00 00 00 00
+T 2A 00 E7 E0 1E 07 54 F3 08 95
+R 00 00 00 00
+T 32 00 AA 92 A0 2E A0 92 9C 00 20 90 9B 00 25 FE
+R 00 00 00 00
+T 40 00 FC CF DE DF A9 90 08 95
+R 00 00 00 00
+T 48 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 EE DF
+R 00 00 00 00
+T 56 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+R 00 00 00 00
+T 64 00 49 91 08 95
+R 00 00 00 00

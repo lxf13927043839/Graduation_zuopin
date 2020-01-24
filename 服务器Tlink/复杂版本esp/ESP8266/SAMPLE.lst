@@ -1,0 +1,1529 @@
+Interrupt Vectors
+    00000 940C 00A5 JMP	__text_start|__start
+    00024 940C 0344 JMP	_uart0_rx_isr
+    0003A 940C 0129 JMP	_timer3_ovf_isr
+    0003C 940C 03F5 JMP	_uart1_rx_isr
+
+Program Code (text area)
+__text_start|__start:
+    000A5 EFCF      LDI	R28,0xFF
+    000A6 E1D0      LDI	R29,0x10
+    000A7 BFCD      OUT	0x3D,R28
+    000A8 BFDE      OUT	0x3E,R29
+    000A9 51CE      SUBI	R28,0x1E
+    000AA 40D0      SBCI	R29,0
+    000AB EA0A      LDI	R16,0xAA
+    000AC 8308      ST	Y,R16
+    000AD 2400      CLR	R0
+    000AE EBED      LDI	R30,0xBD
+    000AF E0F1      LDI	R31,1
+    000B0 E01D      LDI	R17,0xD
+    000B1 3BED      CPI	R30,0xBD
+    000B2 07F1      CPC	R31,R17
+    000B3 F011      BEQ	0x00B6
+    000B4 9201      ST	Z+,R0
+    000B5 CFFB      RJMP	0x00B1
+    000B6 8300      ST	Z,R16
+    000B7 E8EC      LDI	R30,0x8C
+    000B8 E0F0      LDI	R31,0
+    000B9 E0A0      LDI	R26,0
+    000BA E0B1      LDI	R27,1
+    000BB E011      LDI	R17,1
+    000BC E000      LDI	R16,0
+    000BD BF0B      OUT	0x3B,R16
+    000BE 34E9      CPI	R30,0x49
+    000BF 07F1      CPC	R31,R17
+    000C0 F021      BEQ	0x00C5
+    000C1 95C8      LPM
+    000C2 9631      ADIW	R30,1
+    000C3 920D      ST	X+,R0
+    000C4 CFF9      RJMP	0x00BE
+    000C5 940E 0301 CALL	_main
+_exit:
+    000C7 CFFF      RJMP	_exit
+_delay:
+  i                    --> R20
+  ms                   --> R16
+    000C8 934A      ST	-Y,R20
+    000C9 935A      ST	-Y,R21
+FILE: D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\main.c
+(0001) //ICC-AVR application builder : 2015/8/10 13:48:34
+(0002) // Target : M64
+(0003) // Crystal: 16.000Mhz
+(0004) 
+(0005) #include <iom64v.h>
+(0006) #include <macros.h>
+(0007) #include <string.h>  
+(0008) #include "uart.h"
+(0009) 
+(0010) //#include "ESP8266.h"
+(0011) 
+(0012) extern unsigned char e8266tomcu_str[1024];
+(0013) extern unsigned int e8266tomcu_num;
+(0014) unsigned char Txto8266Buf[1024];
+(0015) unsigned char flag=0;
+(0016) 
+(0017) unsigned char time1sflag = 0;
+(0018) unsigned char timensflag = 0;
+(0019) unsigned char linkokflag = 0;
+(0020) 
+(0021) unsigned char time=0;
+(0022) #define   timens   5     //修改发送时间间隔   5秒
+(0023) 
+(0024) void delay(int ms)
+(0025) {
+    000CA C018      RJMP	0x00E3
+(0026)   int i;
+(0027)   while(ms--)
+(0028)   {
+(0029)     for(i=0;i<1000;i++)
+    000CB 2744      CLR	R20
+    000CC 2755      CLR	R21
+(0030) 	{
+(0031) 	 NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+    000CD 0000      NOP
+    000CE 0000      NOP
+    000CF 0000      NOP
+    000D0 0000      NOP
+    000D1 0000      NOP
+    000D2 0000      NOP
+    000D3 0000      NOP
+    000D4 0000      NOP
+(0032) 	 NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+    000D5 0000      NOP
+    000D6 0000      NOP
+    000D7 0000      NOP
+    000D8 0000      NOP
+    000D9 0000      NOP
+    000DA 0000      NOP
+    000DB 0000      NOP
+    000DC 0000      NOP
+    000DD 5F4F      SUBI	R20,0xFF
+    000DE 4F5F      SBCI	R21,0xFF
+    000DF 3E48      CPI	R20,0xE8
+    000E0 E0E3      LDI	R30,3
+    000E1 075E      CPC	R21,R30
+    000E2 F354      BLT	0x00CD
+    000E3 0118      MOVW	R2,R16
+    000E4 5001      SUBI	R16,1
+    000E5 4010      SBCI	R17,0
+    000E6 2022      TST	R2
+    000E7 F719      BNE	0x00CB
+    000E8 2033      TST	R3
+    000E9 F709      BNE	0x00CB
+    000EA 9159      LD	R21,Y+
+    000EB 9149      LD	R20,Y+
+    000EC 9508      RET
+(0033) 	}
+(0034)   }
+(0035) }
+(0036) 
+(0037) void port_init(void)
+(0038) {
+(0039)  PORTA = 0x00;
+_port_init:
+    000ED 2422      CLR	R2
+    000EE BA2B      OUT	0x1B,R2
+(0040)  DDRA  = 0x00;
+    000EF BA2A      OUT	0x1A,R2
+(0041)  PORTB = 0x00;
+    000F0 BA28      OUT	0x18,R2
+(0042)  DDRB  = 0x00;
+    000F1 BA27      OUT	0x17,R2
+(0043)  PORTC = 0x00; //m103 output only
+    000F2 BA25      OUT	0x15,R2
+(0044)  DDRC  = 0x00;
+    000F3 BA24      OUT	0x14,R2
+(0045)  PORTD = 0x00;
+    000F4 BA22      OUT	0x12,R2
+(0046)  DDRD  = 0x00;
+    000F5 BA21      OUT	0x11,R2
+(0047)  PORTE = 0x00;
+    000F6 B823      OUT	0x03,R2
+(0048)  DDRE  = 0x00;
+    000F7 B822      OUT	0x02,R2
+(0049)  PORTF = 0x00;
+    000F8 9220 0062 STS	0x62,R2
+(0050)  DDRF  = 0x00;
+    000FA 9220 0061 STS	0x61,R2
+(0051)  PORTG = 0x00;
+    000FC 9220 0065 STS	0x65,R2
+(0052)  DDRG  = 0x1F;
+    000FE E18F      LDI	R24,0x1F
+    000FF 9380 0064 STS	0x64,R24
+    00101 9508      RET
+(0053) }
+(0054) 
+(0055) //TIMER3 initialize - prescale:256
+(0056) // WGM: 0) Normal, TOP=0xFFFF
+(0057) // desired value: 1Sec
+(0058) // actual value:  1.000Sec (0.0%)
+(0059) void timer3_init(void)
+(0060) {
+(0061)  TCCR3B = 0x00; //stop
+_timer3_init:
+    00102 2422      CLR	R2
+    00103 9220 008A STS	0x8A,R2
+(0062)  TCNT3H = 0x0B; //setup
+    00105 E08B      LDI	R24,0xB
+    00106 9380 0089 STS	0x89,R24
+(0063)  TCNT3L = 0xDC;
+    00108 ED8C      LDI	R24,0xDC
+    00109 9380 0088 STS	0x88,R24
+(0064)  OCR3AH = 0xF4;
+    0010B EF84      LDI	R24,0xF4
+    0010C 9380 0087 STS	0x87,R24
+(0065)  OCR3AL = 0x24;
+    0010E E284      LDI	R24,0x24
+    0010F 9380 0086 STS	0x86,R24
+(0066)  OCR3BH = 0xF4;
+    00111 EF84      LDI	R24,0xF4
+    00112 9380 0085 STS	0x85,R24
+(0067)  OCR3BL = 0x24;
+    00114 E284      LDI	R24,0x24
+    00115 9380 0084 STS	0x84,R24
+(0068)  OCR3CH = 0xF4;
+    00117 EF84      LDI	R24,0xF4
+    00118 9380 0083 STS	0x83,R24
+(0069)  OCR3CL = 0x24;
+    0011A E284      LDI	R24,0x24
+    0011B 9380 0082 STS	0x82,R24
+(0070)  ICR3H  = 0xF4;
+    0011D EF84      LDI	R24,0xF4
+    0011E 9380 0081 STS	0x81,R24
+(0071)  ICR3L  = 0x24;
+    00120 E284      LDI	R24,0x24
+    00121 9380 0080 STS	0x80,R24
+(0072)  TCCR3A = 0x00;
+    00123 9220 008B STS	0x8B,R2
+(0073)  TCCR3B = 0x04; //start Timer
+    00125 E084      LDI	R24,4
+    00126 9380 008A STS	0x8A,R24
+    00128 9508      RET
+_timer3_ovf_isr:
+    00129 922A      ST	-Y,R2
+    0012A 938A      ST	-Y,R24
+    0012B 939A      ST	-Y,R25
+    0012C B62F      IN	R2,0x3F
+    0012D 922A      ST	-Y,R2
+(0074) }
+(0075) 
+(0076) #pragma interrupt_handler timer3_ovf_isr:iv_TIM3_OVF
+(0077) void timer3_ovf_isr(void)
+(0078) {
+(0079)  //static unsigned char i;
+(0080)  //TIMER3 has overflowed
+(0081)  TCNT3H = 0x0B; //reload counter high value
+    0012E E08B      LDI	R24,0xB
+    0012F 9380 0089 STS	0x89,R24
+(0082)  TCNT3L = 0xDC; //reload counter low value
+    00131 ED8C      LDI	R24,0xDC
+    00132 9380 0088 STS	0x88,R24
+(0083)  time1sflag = 1;
+    00134 E081      LDI	R24,1
+    00135 9380 0101 STS	time1sflag,R24
+(0084)  if(++time>timens){timensflag = 1;time=0;}
+    00137 9180 0104 LDS	R24,time
+    00139 5F8F      SUBI	R24,0xFF
+    0013A 2E28      MOV	R2,R24
+    0013B 9220 0104 STS	time,R2
+    0013D E085      LDI	R24,5
+    0013E 1582      CP	R24,R2
+    0013F F430      BCC	0x0146
+    00140 E081      LDI	R24,1
+    00141 9380 0102 STS	timensflag,R24
+    00143 2422      CLR	R2
+    00144 9220 0104 STS	time,R2
+    00146 9029      LD	R2,Y+
+    00147 BE2F      OUT	0x3F,R2
+    00148 9199      LD	R25,Y+
+    00149 9189      LD	R24,Y+
+    0014A 9029      LD	R2,Y+
+    0014B 9518      RETI
+(0085)  
+(0086) }
+(0087) 
+(0088) //call this routine to initialize all peripherals
+(0089) void init_devices(void)
+(0090) {
+(0091)  //stop errant interrupts until set up
+(0092)  CLI(); //disable all interrupts
+_init_devices:
+    0014C 94F8      BCLR	7
+(0093)  XDIV  = 0x00; //xtal divider
+    0014D 2422      CLR	R2
+    0014E BE2C      OUT	0x3C,R2
+(0094)  XMCRA = 0x00; //external memory
+    0014F 9220 006D STS	0x6D,R2
+(0095)  port_init();
+    00151 DF9B      RCALL	_port_init
+(0096)  
+(0097)  uart0_init();
+    00152 940E 0326 CALL	_uart0_init
+(0098)  uart1_init();
+    00154 940E 0333 CALL	_uart1_init
+(0099)  timer3_init();
+    00156 DFAB      RCALL	_timer3_init
+(0100)  MCUCR = 0x00;
+    00157 2422      CLR	R2
+    00158 BE25      OUT	0x35,R2
+(0101)  EICRA = 0x00; //extended ext ints
+    00159 9220 006A STS	0x6A,R2
+(0102)  EICRB = 0x00; //extended ext ints
+    0015B BE2A      OUT	0x3A,R2
+(0103)  EIMSK = 0x00;
+    0015C BE29      OUT	0x39,R2
+(0104)  TIMSK = 0x00; //timer interrupt sources
+    0015D BE27      OUT	0x37,R2
+(0105)  ETIMSK = 0x04; //extended timer interrupt sources
+    0015E E084      LDI	R24,4
+    0015F 9380 007D STS	0x7D,R24
+(0106)  SEI(); //re-enable interrupts
+    00161 9478      BSET	7
+    00162 9508      RET
+_clearNum:
+  i                    --> R20
+  p                    --> R16
+    00163 934A      ST	-Y,R20
+    00164 935A      ST	-Y,R21
+(0107)  //all peripherals are now initialized
+(0108) }
+(0109) void clearNum(unsigned char *p){
+(0110)     unsigned int i;
+(0111)     for(i=0;i<1020;i++)
+    00165 2744      CLR	R20
+    00166 2755      CLR	R21
+    00167 C007      RJMP	0x016F
+(0112)     {
+(0113)   	    p[i]=0;   //清空数据缓存
+    00168 01FA      MOVW	R30,R20
+    00169 0FE0      ADD	R30,R16
+    0016A 1FF1      ADC	R31,R17
+    0016B 2422      CLR	R2
+    0016C 8220      ST	Z,R2
+    0016D 5F4F      SUBI	R20,0xFF
+    0016E 4F5F      SBCI	R21,0xFF
+    0016F 3F4C      CPI	R20,0xFC
+    00170 E0E3      LDI	R30,3
+    00171 075E      CPC	R21,R30
+    00172 F3A8      BCS	0x0168
+    00173 9159      LD	R21,Y+
+    00174 9149      LD	R20,Y+
+    00175 9508      RET
+_E8266inittotlink:
+    00176 940E 053B CALL	push_xgset300C
+(0114)     }
+(0115) }
+(0116) unsigned char E8266inittotlink(void){
+(0117)     static unsigned char E8266state = 0,time = 0;
+(0118) 	switch(E8266state){
+    00178 9140 0105 LDS	R20,main.c:E8266state
+    0017A 2755      CLR	R21
+    0017B 3040      CPI	R20,0
+    0017C 0745      CPC	R20,R21
+    0017D F149      BEQ	0x01A7
+    0017E 3041      CPI	R20,1
+    0017F E0E0      LDI	R30,0
+    00180 075E      CPC	R21,R30
+    00181 F409      BNE	0x0183
+    00182 C04A      RJMP	0x01CD
+    00183 3042      CPI	R20,2
+    00184 E0E0      LDI	R30,0
+    00185 075E      CPC	R21,R30
+    00186 F409      BNE	0x0188
+    00187 C06B      RJMP	0x01F3
+    00188 3043      CPI	R20,3
+    00189 E0E0      LDI	R30,0
+    0018A 075E      CPC	R21,R30
+    0018B F409      BNE	0x018D
+    0018C C08D      RJMP	0x021A
+    0018D 3044      CPI	R20,4
+    0018E E0E0      LDI	R30,0
+    0018F 075E      CPC	R21,R30
+    00190 F409      BNE	0x0192
+    00191 C0AF      RJMP	0x0241
+    00192 3045      CPI	R20,5
+    00193 E0E0      LDI	R30,0
+    00194 075E      CPC	R21,R30
+    00195 F409      BNE	0x0197
+    00196 C0D1      RJMP	0x0268
+    00197 3046      CPI	R20,6
+    00198 E0E0      LDI	R30,0
+    00199 075E      CPC	R21,R30
+    0019A F409      BNE	0x019C
+    0019B C0F9      RJMP	0x0295
+    0019C 3047      CPI	R20,7
+    0019D E0E0      LDI	R30,0
+    0019E 075E      CPC	R21,R30
+    0019F F409      BNE	0x01A1
+    001A0 C121      RJMP	0x02C2
+    001A1 3048      CPI	R20,0x8
+    001A2 E0E0      LDI	R30,0
+    001A3 075E      CPC	R21,R30
+    001A4 F409      BNE	0x01A6
+    001A5 C134      RJMP	0x02DA
+    001A6 C157      RJMP	0x02FE
+(0119) 	  case 0:
+(0120) 	  time++;
+    001A7 9180 0106 LDS	R24,main.c:time
+    001A9 5F8F      SUBI	R24,0xFF
+    001AA 9380 0106 STS	main.c:time,R24
+(0121) 	  if(strstr(e8266tomcu_str,"ready")!=0){
+    001AC E92A      LDI	R18,0x9A
+    001AD E031      LDI	R19,1
+    001AE EB0D      LDI	R16,0xBD
+    001AF E015      LDI	R17,5
+    001B0 940E 0525 CALL	_strstr
+    001B2 3000      CPI	R16,0
+    001B3 0701      CPC	R16,R17
+    001B4 F409      BNE	0x01B6
+    001B5 C148      RJMP	0x02FE
+(0122) 	     mcutopc_str(e8266tomcu_str);
+    001B6 EB0D      LDI	R16,0xBD
+    001B7 E015      LDI	R17,5
+    001B8 940E 04FE CALL	_mcutopc_str
+(0123) 	     clearNum(e8266tomcu_str);
+    001BA EB0D      LDI	R16,0xBD
+    001BB E015      LDI	R17,5
+    001BC DFA6      RCALL	_clearNum
+(0124) 		 time = 0;
+    001BD 2422      CLR	R2
+    001BE 9220 0106 STS	main.c:time,R2
+(0125) 		 e8266tomcu_num = 0;
+    001C0 2433      CLR	R3
+    001C1 9230 01A3 STS	e8266tomcu_num+1,R3
+    001C3 9220 01A2 STS	e8266tomcu_num,R2
+(0126) 	     mcuto8266_str("AT+CWMODE=1\r\n");
+    001C5 E80C      LDI	R16,0x8C
+    001C6 E011      LDI	R17,1
+    001C7 940E 0515 CALL	_mcuto8266_str
+(0127) 		 E8266state = 1;
+    001C9 E081      LDI	R24,1
+    001CA 9380 0105 STS	main.c:E8266state,R24
+(0128) 	  }
+(0129) 	  break;
+    001CC C131      RJMP	0x02FE
+(0130) 	  case 1:
+(0131) 	  time++;
+    001CD 9180 0106 LDS	R24,main.c:time
+    001CF 5F8F      SUBI	R24,0xFF
+    001D0 9380 0106 STS	main.c:time,R24
+(0132) 	  if(strstr(e8266tomcu_str,"OK")!=0){
+    001D2 E829      LDI	R18,0x89
+    001D3 E031      LDI	R19,1
+    001D4 EB0D      LDI	R16,0xBD
+    001D5 E015      LDI	R17,5
+    001D6 940E 0525 CALL	_strstr
+    001D8 3000      CPI	R16,0
+    001D9 0701      CPC	R16,R17
+    001DA F409      BNE	0x01DC
+    001DB C122      RJMP	0x02FE
+(0133) 	     mcutopc_str(e8266tomcu_str);
+    001DC EB0D      LDI	R16,0xBD
+    001DD E015      LDI	R17,5
+    001DE 940E 04FE CALL	_mcutopc_str
+(0134) 		 clearNum(e8266tomcu_str);
+    001E0 EB0D      LDI	R16,0xBD
+    001E1 E015      LDI	R17,5
+    001E2 DF80      RCALL	_clearNum
+(0135) 		 time = 0;
+    001E3 2422      CLR	R2
+    001E4 9220 0106 STS	main.c:time,R2
+(0136) 		 e8266tomcu_num = 0;
+    001E6 2433      CLR	R3
+    001E7 9230 01A3 STS	e8266tomcu_num+1,R3
+    001E9 9220 01A2 STS	e8266tomcu_num,R2
+(0137) 		 //mcuto8266_str("AT+CWJAP=\"zsc\",\"13631103\"\r\n");
+(0138) 		 mcuto8266_str("AT+CWJAP=\"zsc888\",\"13631103\"\r\n");
+    001EB E60A      LDI	R16,0x6A
+    001EC E011      LDI	R17,1
+    001ED 940E 0515 CALL	_mcuto8266_str
+(0139) 		 E8266state = 2;
+    001EF E082      LDI	R24,2
+    001F0 9380 0105 STS	main.c:E8266state,R24
+(0140) 	  }
+(0141) 	  break;
+    001F2 C10B      RJMP	0x02FE
+(0142) 	  case 2:
+(0143) 	  time++;
+    001F3 9180 0106 LDS	R24,main.c:time
+    001F5 5F8F      SUBI	R24,0xFF
+    001F6 9380 0106 STS	main.c:time,R24
+(0144) 	  if(strstr(e8266tomcu_str,"OK")!=0){
+    001F8 E829      LDI	R18,0x89
+    001F9 E031      LDI	R19,1
+    001FA EB0D      LDI	R16,0xBD
+    001FB E015      LDI	R17,5
+    001FC 940E 0525 CALL	_strstr
+    001FE 0158      MOVW	R10,R16
+    001FF 3000      CPI	R16,0
+    00200 0701      CPC	R16,R17
+    00201 F409      BNE	0x0203
+    00202 C0FB      RJMP	0x02FE
+(0145) 	     mcutopc_str(e8266tomcu_str);
+    00203 EB0D      LDI	R16,0xBD
+    00204 E015      LDI	R17,5
+    00205 940E 04FE CALL	_mcutopc_str
+(0146) 		 clearNum(e8266tomcu_str);
+    00207 EB0D      LDI	R16,0xBD
+    00208 E015      LDI	R17,5
+    00209 DF59      RCALL	_clearNum
+(0147) 		 time = 0;
+    0020A 2422      CLR	R2
+    0020B 9220 0106 STS	main.c:time,R2
+(0148) 		 e8266tomcu_num = 0;
+    0020D 2433      CLR	R3
+    0020E 9230 01A3 STS	e8266tomcu_num+1,R3
+    00210 9220 01A2 STS	e8266tomcu_num,R2
+(0149) 		 mcuto8266_str("AT+CIPSTART=\"TCP\",\"tcp.tlink.io\",8647\r\n");
+    00212 E402      LDI	R16,0x42
+    00213 E011      LDI	R17,1
+    00214 940E 0515 CALL	_mcuto8266_str
+(0150) 		 E8266state = 3;
+    00216 E083      LDI	R24,3
+    00217 9380 0105 STS	main.c:E8266state,R24
+(0151) 	  }
+(0152) 	  break;
+    00219 C0E4      RJMP	0x02FE
+(0153) 	  case 3:
+(0154) 	  time++;
+    0021A 9180 0106 LDS	R24,main.c:time
+    0021C 5F8F      SUBI	R24,0xFF
+    0021D 9380 0106 STS	main.c:time,R24
+(0155) 	  if(strstr(e8266tomcu_str,"OK")!=0){
+    0021F E829      LDI	R18,0x89
+    00220 E031      LDI	R19,1
+    00221 EB0D      LDI	R16,0xBD
+    00222 E015      LDI	R17,5
+    00223 940E 0525 CALL	_strstr
+    00225 0158      MOVW	R10,R16
+    00226 3000      CPI	R16,0
+    00227 0701      CPC	R16,R17
+    00228 F409      BNE	0x022A
+    00229 C0D4      RJMP	0x02FE
+(0156) 	     mcutopc_str(e8266tomcu_str);
+    0022A EB0D      LDI	R16,0xBD
+    0022B E015      LDI	R17,5
+    0022C 940E 04FE CALL	_mcutopc_str
+(0157) 		 clearNum(e8266tomcu_str);
+    0022E EB0D      LDI	R16,0xBD
+    0022F E015      LDI	R17,5
+    00230 DF32      RCALL	_clearNum
+(0158) 		 time = 0;
+    00231 2422      CLR	R2
+    00232 9220 0106 STS	main.c:time,R2
+(0159) 		 e8266tomcu_num = 0;
+    00234 2433      CLR	R3
+    00235 9230 01A3 STS	e8266tomcu_num+1,R3
+    00237 9220 01A2 STS	e8266tomcu_num,R2
+(0160) 		 mcuto8266_str("AT+CIPMODE=1\r\n");
+    00239 E303      LDI	R16,0x33
+    0023A E011      LDI	R17,1
+    0023B 940E 0515 CALL	_mcuto8266_str
+(0161) 		 E8266state = 4;
+    0023D E084      LDI	R24,4
+    0023E 9380 0105 STS	main.c:E8266state,R24
+(0162) 	  }
+(0163) 	  break;
+    00240 C0BD      RJMP	0x02FE
+(0164) 	  case 4:
+(0165) 	  time++;
+    00241 9180 0106 LDS	R24,main.c:time
+    00243 5F8F      SUBI	R24,0xFF
+    00244 9380 0106 STS	main.c:time,R24
+(0166) 	  if(strstr(e8266tomcu_str,"OK")!=0){
+    00246 E829      LDI	R18,0x89
+    00247 E031      LDI	R19,1
+    00248 EB0D      LDI	R16,0xBD
+    00249 E015      LDI	R17,5
+    0024A 940E 0525 CALL	_strstr
+    0024C 0158      MOVW	R10,R16
+    0024D 3000      CPI	R16,0
+    0024E 0701      CPC	R16,R17
+    0024F F409      BNE	0x0251
+    00250 C0AD      RJMP	0x02FE
+(0167) 	     mcutopc_str(e8266tomcu_str);
+    00251 EB0D      LDI	R16,0xBD
+    00252 E015      LDI	R17,5
+    00253 940E 04FE CALL	_mcutopc_str
+(0168) 		 clearNum(e8266tomcu_str);
+    00255 EB0D      LDI	R16,0xBD
+    00256 E015      LDI	R17,5
+    00257 DF0B      RCALL	_clearNum
+(0169) 		 time = 0;
+    00258 2422      CLR	R2
+    00259 9220 0106 STS	main.c:time,R2
+(0170) 		 e8266tomcu_num = 0;
+    0025B 2433      CLR	R3
+    0025C 9230 01A3 STS	e8266tomcu_num+1,R3
+    0025E 9220 01A2 STS	e8266tomcu_num,R2
+(0171) 		 mcuto8266_str("AT+CIPSEND\r\n");
+    00260 E206      LDI	R16,0x26
+    00261 E011      LDI	R17,1
+    00262 940E 0515 CALL	_mcuto8266_str
+(0172) 		 E8266state = 5;
+    00264 E085      LDI	R24,5
+    00265 9380 0105 STS	main.c:E8266state,R24
+(0173) 	  }
+(0174) 	  break;
+    00267 C096      RJMP	0x02FE
+(0175) 	  case 5:
+(0176) 	  time++;
+    00268 9180 0106 LDS	R24,main.c:time
+    0026A 5F8F      SUBI	R24,0xFF
+    0026B 9380 0106 STS	main.c:time,R24
+(0177) 	  if(strstr(e8266tomcu_str,">")!=0){
+    0026D E224      LDI	R18,0x24
+    0026E E031      LDI	R19,1
+    0026F EB0D      LDI	R16,0xBD
+    00270 E015      LDI	R17,5
+    00271 940E 0525 CALL	_strstr
+    00273 0158      MOVW	R10,R16
+    00274 3000      CPI	R16,0
+    00275 0701      CPC	R16,R17
+    00276 F409      BNE	0x0278
+    00277 C086      RJMP	0x02FE
+(0178) 	     mcutopc_str(e8266tomcu_str);
+    00278 EB0D      LDI	R16,0xBD
+    00279 E015      LDI	R17,5
+    0027A 940E 04FE CALL	_mcutopc_str
+(0179) 		 clearNum(e8266tomcu_str);
+    0027C EB0D      LDI	R16,0xBD
+    0027D E015      LDI	R17,5
+    0027E DEE4      RCALL	_clearNum
+(0180) 		 time = 0;
+    0027F 2422      CLR	R2
+    00280 9220 0106 STS	main.c:time,R2
+(0181) 		 e8266tomcu_num = 0;
+    00282 2433      CLR	R3
+    00283 9230 01A3 STS	e8266tomcu_num+1,R3
+    00285 9220 01A2 STS	e8266tomcu_num,R2
+(0182) 		 mcuto8266_str("XXUN3WE5D1U74ARO");  //发送设备序列号
+    00287 E103      LDI	R16,0x13
+    00288 E011      LDI	R17,1
+    00289 940E 0515 CALL	_mcuto8266_str
+(0183) 		 E8266state = 6;
+    0028B E086      LDI	R24,6
+    0028C 9380 0105 STS	main.c:E8266state,R24
+(0184) 		 linkokflag = 1;
+    0028E E081      LDI	R24,1
+    0028F 9380 0103 STS	linkokflag,R24
+(0185) 		 timensflag = 0;//必须重新开始计时，否则程序不正常
+    00291 2422      CLR	R2
+    00292 9220 0102 STS	timensflag,R2
+(0186) 	  }
+(0187) 	  break;
+    00294 C069      RJMP	0x02FE
+(0188) 	  case 6:
+(0189) 	  time++;
+    00295 9180 0106 LDS	R24,main.c:time
+    00297 5F8F      SUBI	R24,0xFF
+    00298 9380 0106 STS	main.c:time,R24
+(0190) 	  if(strstr(e8266tomcu_str,"ok")!=0){
+    0029A E120      LDI	R18,0x10
+    0029B E031      LDI	R19,1
+    0029C EB0D      LDI	R16,0xBD
+    0029D E015      LDI	R17,5
+    0029E 940E 0525 CALL	_strstr
+    002A0 0158      MOVW	R10,R16
+    002A1 3000      CPI	R16,0
+    002A2 0701      CPC	R16,R17
+    002A3 F079      BEQ	0x02B3
+(0191) 	     //PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯
+(0192) 	     mcutopc_str(e8266tomcu_str);
+    002A4 EB0D      LDI	R16,0xBD
+    002A5 E015      LDI	R17,5
+    002A6 940E 04FE CALL	_mcutopc_str
+(0193) 		 clearNum(e8266tomcu_str);
+    002A8 EB0D      LDI	R16,0xBD
+    002A9 E015      LDI	R17,5
+    002AA DEB8      RCALL	_clearNum
+(0194) 		 time = 0;
+    002AB 2422      CLR	R2
+    002AC 9220 0106 STS	main.c:time,R2
+(0195) 		 e8266tomcu_num = 0; 
+    002AE 2433      CLR	R3
+    002AF 9230 01A3 STS	e8266tomcu_num+1,R3
+    002B1 9220 01A2 STS	e8266tomcu_num,R2
+(0196) 		 //mcuto8266_str("#50,30,70,50,1,1#");
+(0197) 		 //mcuto8266_str(Txto8266Buf);
+(0198) 		 //PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯 
+(0199) 	  }
+(0200) 	  if(time>30){
+    002B3 E18E      LDI	R24,0x1E
+    002B4 9020 0106 LDS	R2,main.c:time
+    002B6 1582      CP	R24,R2
+    002B7 F008      BCS	0x02B9
+    002B8 C045      RJMP	0x02FE
+(0201) 	     E8266state = 7; //如果超时没有接收到心跳包则进入异常处理
+    002B9 E087      LDI	R24,7
+    002BA 9380 0105 STS	main.c:E8266state,R24
+(0202) 		 linkokflag = 0; //连接失效
+    002BC 2422      CLR	R2
+    002BD 9220 0103 STS	linkokflag,R2
+(0203) 		 time = 0;
+    002BF 9220 0106 STS	main.c:time,R2
+(0204) 	  }	 
+(0205) 	  break;
+    002C1 C03C      RJMP	0x02FE
+(0206) 	  case 7:
+(0207) 	  	 clearNum(e8266tomcu_str);
+    002C2 EB0D      LDI	R16,0xBD
+    002C3 E015      LDI	R17,5
+    002C4 DE9E      RCALL	_clearNum
+(0208) 		 e8266tomcu_num = 0; 
+    002C5 2422      CLR	R2
+    002C6 2433      CLR	R3
+    002C7 9230 01A3 STS	e8266tomcu_num+1,R3
+    002C9 9220 01A2 STS	e8266tomcu_num,R2
+(0209) 		 mcuto8266_str("+++");//异常处理
+    002CB E00C      LDI	R16,0xC
+    002CC E011      LDI	R17,1
+    002CD 940E 0515 CALL	_mcuto8266_str
+(0210) 		 delay(2000);
+    002CF ED00      LDI	R16,0xD0
+    002D0 E017      LDI	R17,7
+    002D1 DDF6      RCALL	_delay
+(0211) 		 //mcutopc_str("\r\n");//异常处理
+(0212) 		 mcuto8266_str("AT\r\n");//异常处理
+    002D2 E007      LDI	R16,7
+    002D3 E011      LDI	R17,1
+    002D4 940E 0515 CALL	_mcuto8266_str
+(0213) 		 E8266state = 8;
+    002D6 E088      LDI	R24,0x8
+    002D7 9380 0105 STS	main.c:E8266state,R24
+(0214) 	  break;
+    002D9 C024      RJMP	0x02FE
+(0215) 	  case 8:
+(0216) 	  	 if(strstr(e8266tomcu_str,"OK")!=0){
+    002DA E829      LDI	R18,0x89
+    002DB E031      LDI	R19,1
+    002DC EB0D      LDI	R16,0xBD
+    002DD E015      LDI	R17,5
+    002DE 940E 0525 CALL	_strstr
+    002E0 0158      MOVW	R10,R16
+    002E1 3000      CPI	R16,0
+    002E2 0701      CPC	R16,R17
+    002E3 F0B9      BEQ	0x02FB
+(0217) 	       mcutopc_str(e8266tomcu_str);
+    002E4 EB0D      LDI	R16,0xBD
+    002E5 E015      LDI	R17,5
+    002E6 940E 04FE CALL	_mcutopc_str
+(0218) 	       clearNum(e8266tomcu_str);
+    002E8 EB0D      LDI	R16,0xBD
+    002E9 E015      LDI	R17,5
+    002EA DE78      RCALL	_clearNum
+(0219) 		   time = 0;
+    002EB 2422      CLR	R2
+    002EC 9220 0106 STS	main.c:time,R2
+(0220) 		   e8266tomcu_num = 0;
+    002EE 2433      CLR	R3
+    002EF 9230 01A3 STS	e8266tomcu_num+1,R3
+    002F1 9220 01A2 STS	e8266tomcu_num,R2
+(0221) 		   mcuto8266_str("AT+CWMODE=1\r\n");
+    002F3 E80C      LDI	R16,0x8C
+    002F4 E011      LDI	R17,1
+    002F5 940E 0515 CALL	_mcuto8266_str
+(0222) 	       E8266state = 1;
+    002F7 E081      LDI	R24,1
+    002F8 9380 0105 STS	main.c:E8266state,R24
+(0223) 	     }
+    002FA C003      RJMP	0x02FE
+(0224) 		 else
+(0225) 		   E8266state = 7;
+    002FB E087      LDI	R24,7
+    002FC 9380 0105 STS	main.c:E8266state,R24
+(0226) 	  break;
+(0227) 	  
+(0228)     }
+(0229) 	return 1;
+    002FE E001      LDI	R16,1
+    002FF 940C 0540 JMP	pop_xgset300C
+(0230) }
+(0231) 
+(0232) int main(void)
+(0233) {
+(0234)     unsigned char i,Num;
+(0235) 	init_devices();
+_main:
+  Num                  --> Y,+1
+  i                    --> Y,+1
+    00301 DE4A      RCALL	_init_devices
+    00302 C021      RJMP	0x0324
+(0236) 	while(1)
+(0237)     {
+(0238)        if(time1sflag == 1){   //上电初始化8266连接服务器，然后每1秒检测有无心跳包
+    00303 9180 0101 LDS	R24,time1sflag
+    00305 3081      CPI	R24,1
+    00306 F471      BNE	0x0315
+(0239) 	      E8266inittotlink();
+    00307 DE6E      RCALL	_E8266inittotlink
+(0240) 		  if(linkokflag == 1)PORTG ^= 0X01;//接受到服务器心跳包就闪烁灯
+    00308 9180 0103 LDS	R24,linkokflag
+    0030A 3081      CPI	R24,1
+    0030B F431      BNE	0x0312
+    0030C E081      LDI	R24,1
+    0030D 9020 0065 LDS	R2,0x65
+    0030F 2628      EOR	R2,R24
+    00310 9220 0065 STS	0x65,R2
+(0241) 		  time1sflag = 0;
+    00312 2422      CLR	R2
+    00313 9220 0101 STS	time1sflag,R2
+(0242) 		  //////////////////////每1秒更新数据，测试用//////////////////////////
+(0243) 		  /*
+(0244) 		  if((PING&(1<<2))== 0) i = 0+48;
+(0245) 		  else i = 1+48;
+(0246) 	      //if(timensflag == 1){  
+(0247) 		    Num++;
+(0248) 		    if(Num==99) Num = 1;
+(0249) 		  	Txto8266Buf[0] = '#';
+(0250) 		  	Txto8266Buf[1] = Num/10+48;
+(0251) 		  	Txto8266Buf[2] = Num%10+48;
+(0252) 		  	Txto8266Buf[3] = ',';
+(0253) 		  	//Txto8266Buf[4] = Num/10+48;
+(0254) 		  	//Txto8266Buf[5] = Num%10+48;
+(0255) 		  	Txto8266Buf[6] = ',';
+(0256) 		  	//Txto8266Buf[7] = Num/10+48;
+(0257) 		  	//Txto8266Buf[8] = Num%10+48;
+(0258) 		  	Txto8266Buf[9] = ',';
+(0259) 		  	//Txto8266Buf[10] = Num/10+48;
+(0260) 		  	//Txto8266Buf[11] = Num%10+48;
+(0261) 		  	Txto8266Buf[12] = ',';
+(0262) 		  	Txto8266Buf[13] = i;
+(0263) 		  	Txto8266Buf[14] = ',';
+(0264) 			
+(0265) 			if((PING&(1<<3))== 0) i = 0+48;
+(0266) 		    else i = 1+48;
+(0267) 			
+(0268) 		  	Txto8266Buf[15] = i;
+(0269) 		  	//Txto8266Buf[16] = '#';
+(0270) 		  	//Txto8266Buf[17] = '\0';*/
+(0271) 	      ////////////////////////////测试代码结束///////////////////////	   
+(0272) 	   }
+(0273) 	   if((timensflag == 1)&&(linkokflag == 1)){
+    00315 9180 0102 LDS	R24,timensflag
+    00317 3081      CPI	R24,1
+    00318 F459      BNE	0x0324
+    00319 9180 0103 LDS	R24,linkokflag
+    0031B 3081      CPI	R24,1
+    0031C F439      BNE	0x0324
+(0274) 	      mcuto8266_str(Txto8266Buf);  //每n秒上传一次数据
+    0031D EB0D      LDI	R16,0xBD
+    0031E E011      LDI	R17,1
+    0031F 940E 0515 CALL	_mcuto8266_str
+(0275) 	      timensflag = 0;
+    00321 2422      CLR	R2
+    00322 9220 0102 STS	timensflag,R2
+    00324 CFDE      RJMP	0x0303
+    00325 9508      RET
+FILE: D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+(0001) // Crystal: 16.000Mhz
+(0002) 
+(0003) #include <iom64v.h>
+(0004) #include <macros.h>
+(0005) #include <string.h>  
+(0006) #include "uart.h"
+(0007) 
+(0008) extern unsigned char time;
+(0009) unsigned int pctomcu_num=0,e8266tomcu_num=0;
+(0010) unsigned char pctomcu_str[1024];//用来保存电脑/协调器发过来的数据
+(0011) unsigned char e8266tomcu_str[1024];//用来保存wifi模块发过来的数据
+(0012) //unsigned char *e8266tomcutopc_str="#00,00,00,00,1,1#";//接收到服务器给8266的开关量后处理保存并发给电脑/协调器
+(0013)  		  	                        //#00,00,00,00,1,1,00,00,00,00,1,1#
+(0014) extern unsigned char linkokflag;
+(0015) extern unsigned char Txto8266Buf[1024];
+(0016) extern unsigned char timensflag;
+(0017) //UART0 initialize
+(0018) // desired baud rate: 9600
+(0019) // actual: baud rate:9615 (0.2%)
+(0020) // char size: 8 bit
+(0021) // parity: Disabled
+(0022) void uart0_init(void)//连接电脑
+(0023) {
+(0024)  UCSR0B = 0x00; //disable while setting baud rate
+_uart0_init:
+    00326 2422      CLR	R2
+    00327 B82A      OUT	0x0A,R2
+(0025)  UCSR0A = 0x00;
+    00328 B82B      OUT	0x0B,R2
+(0026)  UCSR0C = 0x06;
+    00329 E086      LDI	R24,6
+    0032A 9380 0095 STS	0x95,R24
+(0027)  UBRR0L = 0x67; //set baud rate lo    08
+    0032C E687      LDI	R24,0x67
+    0032D B989      OUT	0x09,R24
+(0028)  UBRR0H = 0x00; //set baud rate hi
+    0032E 9220 0090 STS	0x90,R2
+(0029)  UCSR0B = 0x98;
+    00330 E988      LDI	R24,0x98
+    00331 B98A      OUT	0x0A,R24
+    00332 9508      RET
+(0030) }
+(0031) 
+(0032) //UART1 initialize
+(0033) // desired baud rate:9600
+(0034) // actual baud rate:9615 (0.2%)
+(0035) // char size: 8 bit
+(0036) // parity: Disabled
+(0037) void uart1_init(void)//连接8266
+(0038) {
+(0039)  UCSR1B = 0x00; //disable while setting baud rate
+_uart1_init:
+    00333 2422      CLR	R2
+    00334 9220 009A STS	0x9A,R2
+(0040)  UCSR1A = 0x00;
+    00336 9220 009B STS	0x9B,R2
+(0041)  UCSR1C = 0x06;
+    00338 E086      LDI	R24,6
+    00339 9380 009D STS	0x9D,R24
+(0042)  UBRR1L = 0x67; //set baud rate lo
+    0033B E687      LDI	R24,0x67
+    0033C 9380 0099 STS	0x99,R24
+(0043)  UBRR1H = 0x00; //set baud rate hi
+    0033E 9220 0098 STS	0x98,R2
+(0044)  UCSR1B = 0x98;
+    00340 E988      LDI	R24,0x98
+    00341 9380 009A STS	0x9A,R24
+    00343 9508      RET
+_uart0_rx_isr:
+  data                 --> R16
+  i                    --> R16
+    00344 922A      ST	-Y,R2
+    00345 923A      ST	-Y,R3
+    00346 930A      ST	-Y,R16
+    00347 931A      ST	-Y,R17
+    00348 932A      ST	-Y,R18
+    00349 933A      ST	-Y,R19
+    0034A 938A      ST	-Y,R24
+    0034B 939A      ST	-Y,R25
+    0034C 93AA      ST	-Y,R26
+    0034D 93EA      ST	-Y,R30
+    0034E 93FA      ST	-Y,R31
+    0034F B62F      IN	R2,0x3F
+    00350 922A      ST	-Y,R2
+(0045) }
+(0046) 
+(0047) #pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+(0048) void uart0_rx_isr(void)  //接收电脑发来的数据
+(0049) {
+(0050)  //添加状态机，只接收以[开始的数据，以]结束后上报到服务器，
+(0051)  //以\0代替最后的]标记，然后修改主程序是上传标记位timensflag=1;立即上报服务器 
+(0052)  //uart has received a character in UDR
+(0053)    static unsigned char pctowifidatastate = 0;
+(0054)    unsigned char data;
+(0055)    unsigned int i;
+(0056)    data=UDR0;
+    00351 B10C      IN	R16,0x0C
+(0057)    ///////////wifi连接成功以后才对电脑/协调器发来的处理进行处理//////////////
+(0058)    if(linkokflag==1){
+    00352 9180 0103 LDS	R24,linkokflag
+    00354 3081      CPI	R24,1
+    00355 F009      BEQ	0x0357
+    00356 C090      RJMP	0x03E7
+(0059)       switch(pctowifidatastate){
+    00357 9120 01A4 LDS	R18,uart.c:pctowifidatastate
+    00359 2733      CLR	R19
+    0035A 3020      CPI	R18,0
+    0035B 0723      CPC	R18,R19
+    0035C F029      BEQ	0x0362
+    0035D 3021      CPI	R18,1
+    0035E E0E0      LDI	R30,0
+    0035F 073E      CPC	R19,R30
+    00360 F071      BEQ	0x036F
+    00361 C085      RJMP	0x03E7
+(0060) 	     case 0:   
+(0061)          if(data=='['){//接收电脑发过来的数据,判断数据是否为[，是则正式接收
+    00362 350B      CPI	R16,0x5B
+    00363 F009      BEQ	0x0365
+    00364 C082      RJMP	0x03E7
+(0062) 	       pctowifidatastate = 1;
+    00365 E081      LDI	R24,1
+    00366 9380 01A4 STS	uart.c:pctowifidatastate,R24
+(0063) 		   pctomcu_num = 0;
+    00368 2422      CLR	R2
+    00369 2433      CLR	R3
+    0036A 9230 01A1 STS	pctomcu_num+1,R3
+    0036C 9220 01A0 STS	pctomcu_num,R2
+(0064) 	  	 }
+(0065) 	  	 break;	
+    0036E C078      RJMP	0x03E7
+(0066) 	  	 case 1:	
+(0067)       	 pctomcu_str[pctomcu_num]=data;
+    0036F EB8D      LDI	R24,0xBD
+    00370 E099      LDI	R25,0x9
+    00371 91E0 01A0 LDS	R30,pctomcu_num
+    00373 91F0 01A1 LDS	R31,pctomcu_num+1
+    00375 0FE8      ADD	R30,R24
+    00376 1FF9      ADC	R31,R25
+    00377 8300      ST	Z,R16
+(0068)       	 pctomcu_num++;
+    00378 9180 01A0 LDS	R24,pctomcu_num
+    0037A 9190 01A1 LDS	R25,pctomcu_num+1
+    0037C 9601      ADIW	R24,1
+    0037D 9390 01A1 STS	pctomcu_num+1,R25
+    0037F 9380 01A0 STS	pctomcu_num,R24
+(0069)       	 if(pctomcu_str[pctomcu_num-1]==']'){//接收完电脑/协调器发过来的数据
+    00381 EB8D      LDI	R24,0xBD
+    00382 E099      LDI	R25,0x9
+    00383 91E0 01A0 LDS	R30,pctomcu_num
+    00385 91F0 01A1 LDS	R31,pctomcu_num+1
+    00387 9731      SBIW	R30,1
+    00388 0FE8      ADD	R30,R24
+    00389 1FF9      ADC	R31,R25
+    0038A 8180      LD	R24,Z
+    0038B 358D      CPI	R24,0x5D
+    0038C F009      BEQ	0x038E
+    0038D C059      RJMP	0x03E7
+(0070) 	        pctomcu_str[pctomcu_num-1]='\0';
+    0038E EB8D      LDI	R24,0xBD
+    0038F E099      LDI	R25,0x9
+    00390 91E0 01A0 LDS	R30,pctomcu_num
+    00392 91F0 01A1 LDS	R31,pctomcu_num+1
+    00394 9731      SBIW	R30,1
+    00395 0FE8      ADD	R30,R24
+    00396 1FF9      ADC	R31,R25
+    00397 2422      CLR	R2
+    00398 8220      ST	Z,R2
+(0071)          	//mcuto8266_str(pctomcu_str);    //从电脑/协调器接收来的数据发给8266
+(0072) 			//数据赋值到上传数据空间
+(0073) 			//mcutopc_str(pctomcu_str);
+(0074) 			for(i=0;i<=(pctomcu_num-3);i++)
+    00399 2700      CLR	R16
+    0039A 2711      CLR	R17
+    0039B C00E      RJMP	0x03AA
+(0075)          	{
+(0076)   	           Txto8266Buf[i]=pctomcu_str[i];   
+    0039C EB8D      LDI	R24,0xBD
+    0039D E099      LDI	R25,0x9
+    0039E 01F8      MOVW	R30,R16
+    0039F 0FE8      ADD	R30,R24
+    003A0 1FF9      ADC	R31,R25
+    003A1 8020      LD	R2,Z
+    003A2 EB8D      LDI	R24,0xBD
+    003A3 E091      LDI	R25,1
+    003A4 01F8      MOVW	R30,R16
+    003A5 0FE8      ADD	R30,R24
+    003A6 1FF9      ADC	R31,R25
+    003A7 8220      ST	Z,R2
+    003A8 5F0F      SUBI	R16,0xFF
+    003A9 4F1F      SBCI	R17,0xFF
+    003AA 9180 01A0 LDS	R24,pctomcu_num
+    003AC 9190 01A1 LDS	R25,pctomcu_num+1
+    003AE 9703      SBIW	R24,3
+    003AF 1780      CP	R24,R16
+    003B0 0791      CPC	R25,R17
+    003B1 F750      BCC	0x039C
+(0077)          	}
+(0078) 			if(pctomcu_str[pctomcu_num-2]=='1') //是否立即上传数据
+    003B2 EB8D      LDI	R24,0xBD
+    003B3 E099      LDI	R25,0x9
+    003B4 91E0 01A0 LDS	R30,pctomcu_num
+    003B6 91F0 01A1 LDS	R31,pctomcu_num+1
+    003B8 9732      SBIW	R30,2
+    003B9 0FE8      ADD	R30,R24
+    003BA 1FF9      ADC	R31,R25
+    003BB 8180      LD	R24,Z
+    003BC 3381      CPI	R24,0x31
+    003BD F419      BNE	0x03C1
+(0079) 			   timensflag = 1;
+    003BE E081      LDI	R24,1
+    003BF 9380 0102 STS	timensflag,R24
+(0080) 			Txto8266Buf[pctomcu_num-2] =  '\0';  
+    003C1 EB8D      LDI	R24,0xBD
+    003C2 E091      LDI	R25,1
+    003C3 91E0 01A0 LDS	R30,pctomcu_num
+    003C5 91F0 01A1 LDS	R31,pctomcu_num+1
+    003C7 9732      SBIW	R30,2
+    003C8 0FE8      ADD	R30,R24
+    003C9 1FF9      ADC	R31,R25
+    003CA 2422      CLR	R2
+    003CB 8220      ST	Z,R2
+(0081) 			//更新mcu下发到电脑/协调器的数据，测试用
+(0082) 			/*if(pctomcu_str[1*13] == '1')
+(0083) 			    e8266tomcutopc_str[13+0*16] =  '1';
+(0084) 			else
+(0085) 				e8266tomcutopc_str[13+0*16] =  '0';
+(0086) 			if(pctomcu_str[1*15] == '1')
+(0087) 			    e8266tomcutopc_str[15+0*16] =  '1';
+(0088) 			else
+(0089) 				e8266tomcutopc_str[15+0*16] =  '0';测试用*/
+(0090) 			/////////////更新mcu下发到电脑/协调器的数据到此结束/////////////	
+(0091) 		 	for(i=0;i<=pctomcu_num;i++)
+    003CC 2700      CLR	R16
+    003CD 2711      CLR	R17
+    003CE C009      RJMP	0x03D8
+(0092)          	{
+(0093)   	           pctomcu_str[i]=0;   //清空数据缓存
+    003CF EB8D      LDI	R24,0xBD
+    003D0 E099      LDI	R25,0x9
+    003D1 01F8      MOVW	R30,R16
+    003D2 0FE8      ADD	R30,R24
+    003D3 1FF9      ADC	R31,R25
+    003D4 2422      CLR	R2
+    003D5 8220      ST	Z,R2
+    003D6 5F0F      SUBI	R16,0xFF
+    003D7 4F1F      SBCI	R17,0xFF
+    003D8 9020 01A0 LDS	R2,pctomcu_num
+    003DA 9030 01A1 LDS	R3,pctomcu_num+1
+    003DC 1620      CP	R2,R16
+    003DD 0631      CPC	R3,R17
+    003DE F780      BCC	0x03CF
+(0094)          	}
+(0095)          	pctomcu_num=0;  //计数清0
+    003DF 2422      CLR	R2
+    003E0 2433      CLR	R3
+    003E1 9230 01A1 STS	pctomcu_num+1,R3
+    003E3 9220 01A0 STS	pctomcu_num,R2
+(0096) 		 	pctowifidatastate = 0;//状态回0，重新接收数据包
+    003E5 9220 01A4 STS	uart.c:pctowifidatastate,R2
+(0097) 	     }	
+(0098) 	  	 break;   
+(0099)       } 
+(0100) 	}   
+    003E7 9029      LD	R2,Y+
+    003E8 BE2F      OUT	0x3F,R2
+    003E9 91F9      LD	R31,Y+
+    003EA 91E9      LD	R30,Y+
+    003EB 91A9      LD	R26,Y+
+    003EC 9199      LD	R25,Y+
+    003ED 9189      LD	R24,Y+
+    003EE 9139      LD	R19,Y+
+    003EF 9129      LD	R18,Y+
+    003F0 9119      LD	R17,Y+
+    003F1 9109      LD	R16,Y+
+    003F2 9039      LD	R3,Y+
+    003F3 9029      LD	R2,Y+
+    003F4 9518      RETI
+_uart1_rx_isr:
+  keystateaddr         --> R10
+  pstr                 --> R22
+  i                    --> R22
+  data                 --> R20
+    003F5 920A      ST	-Y,R0
+    003F6 921A      ST	-Y,R1
+    003F7 922A      ST	-Y,R2
+    003F8 923A      ST	-Y,R3
+    003F9 924A      ST	-Y,R4
+    003FA 925A      ST	-Y,R5
+    003FB 926A      ST	-Y,R6
+    003FC 927A      ST	-Y,R7
+    003FD 928A      ST	-Y,R8
+    003FE 929A      ST	-Y,R9
+    003FF 930A      ST	-Y,R16
+    00400 931A      ST	-Y,R17
+    00401 932A      ST	-Y,R18
+    00402 933A      ST	-Y,R19
+    00403 938A      ST	-Y,R24
+    00404 939A      ST	-Y,R25
+    00405 93AA      ST	-Y,R26
+    00406 93BA      ST	-Y,R27
+    00407 93EA      ST	-Y,R30
+    00408 93FA      ST	-Y,R31
+    00409 B60F      IN	R0,0x3F
+    0040A 920A      ST	-Y,R0
+    0040B 940E 0545 CALL	push_xgsetF00C
+(0101) }
+(0102) 
+(0103) 
+(0104) #pragma interrupt_handler uart1_rx_isr:iv_USART1_RXC
+(0105) void uart1_rx_isr(void)   //接收8266发送过来的数据
+(0106) {
+(0107)  //uart has received a character in UDR
+(0108)    static unsigned char wifitomcudatastate = 0;
+(0109)    unsigned char data;
+(0110)    unsigned int i;
+(0111)    char *pstr;//用来保存字符匹配的位置
+(0112)    char keystateaddr;
+(0113)    data = UDR1;
+    0040D 9140 009C LDS	R20,0x9C
+(0114)    if(linkokflag==1){
+    0040F 9180 0103 LDS	R24,linkokflag
+    00411 3081      CPI	R24,1
+    00412 F009      BEQ	0x0414
+    00413 C0AD      RJMP	0x04C1
+(0115)       switch(wifitomcudatastate){
+    00414 9160 01A5 LDS	R22,uart.c:wifitomcudatastate
+    00416 2777      CLR	R23
+    00417 3060      CPI	R22,0
+    00418 0767      CPC	R22,R23
+    00419 F029      BEQ	0x041F
+    0041A 3061      CPI	R22,1
+    0041B E0E0      LDI	R30,0
+    0041C 077E      CPC	R23,R30
+    0041D F071      BEQ	0x042C
+    0041E C0B4      RJMP	0x04D3
+(0116) 	     case 0:   
+(0117)          if(data=='['){//接收8266发过来的数据,判断数据是否为[，是则正式接收
+    0041F 354B      CPI	R20,0x5B
+    00420 F009      BEQ	0x0422
+    00421 C0B1      RJMP	0x04D3
+(0118) 	       wifitomcudatastate = 1;
+    00422 E081      LDI	R24,1
+    00423 9380 01A5 STS	uart.c:wifitomcudatastate,R24
+(0119) 		   e8266tomcu_num = 0;
+    00425 2422      CLR	R2
+    00426 2433      CLR	R3
+    00427 9230 01A3 STS	e8266tomcu_num+1,R3
+    00429 9220 01A2 STS	e8266tomcu_num,R2
+(0120) 	  	 }
+(0121) 	  	 break;	
+    0042B C0A7      RJMP	0x04D3
+(0122)    		 case 1:	
+(0123)       	 e8266tomcu_str[e8266tomcu_num]=data;
+    0042C EB8D      LDI	R24,0xBD
+    0042D E095      LDI	R25,5
+    0042E 91E0 01A2 LDS	R30,e8266tomcu_num
+    00430 91F0 01A3 LDS	R31,e8266tomcu_num+1
+    00432 0FE8      ADD	R30,R24
+    00433 1FF9      ADC	R31,R25
+    00434 8340      ST	Z,R20
+(0124)       	 e8266tomcu_num++;
+    00435 9180 01A2 LDS	R24,e8266tomcu_num
+    00437 9190 01A3 LDS	R25,e8266tomcu_num+1
+    00439 9601      ADIW	R24,1
+    0043A 9390 01A3 STS	e8266tomcu_num+1,R25
+    0043C 9380 01A2 STS	e8266tomcu_num,R24
+(0125)       	 if(e8266tomcu_str[e8266tomcu_num-1]==']'){//接收完服务器发过来的数据
+    0043E EB8D      LDI	R24,0xBD
+    0043F E095      LDI	R25,5
+    00440 91E0 01A2 LDS	R30,e8266tomcu_num
+    00442 91F0 01A3 LDS	R31,e8266tomcu_num+1
+    00444 9731      SBIW	R30,1
+    00445 0FE8      ADD	R30,R24
+    00446 1FF9      ADC	R31,R25
+    00447 8180      LD	R24,Z
+    00448 358D      CPI	R24,0x5D
+    00449 F009      BEQ	0x044B
+    0044A C088      RJMP	0x04D3
+(0126) 	        e8266tomcu_str[e8266tomcu_num-1]='\0';
+    0044B EB8D      LDI	R24,0xBD
+    0044C E095      LDI	R25,5
+    0044D 91E0 01A2 LDS	R30,e8266tomcu_num
+    0044F 91F0 01A3 LDS	R31,e8266tomcu_num+1
+    00451 9731      SBIW	R30,1
+    00452 0FE8      ADD	R30,R24
+    00453 1FF9      ADC	R31,R25
+    00454 2422      CLR	R2
+    00455 8220      ST	Z,R2
+(0127) 			mcutopc_str(e8266tomcu_str);//把8266发来的原始数据发送给电脑/协调器
+    00456 EB0D      LDI	R16,0xBD
+    00457 E015      LDI	R17,5
+    00458 D0A5      RCALL	_mcutopc_str
+(0128)    	    ////////////////////此处开始判断开关是否按下///////////////////////////
+(0129) 	      //判断第一个开关
+(0130) 	      pstr = strstr(e8266tomcu_str,"200053198");
+    00459 EB23      LDI	R18,0xB3
+    0045A E031      LDI	R19,1
+    0045B EB0D      LDI	R16,0xBD
+    0045C E015      LDI	R17,5
+    0045D 940E 0525 CALL	_strstr
+    0045F 01B8      MOVW	R22,R16
+(0131) 	   	  if(pstr != 0){
+    00460 3000      CPI	R16,0
+    00461 0701      CPC	R16,R17
+    00462 F091      BEQ	0x0475
+(0132) 	         keystateaddr = *(pstr+21);
+    00463 01FB      MOVW	R30,R22
+    00464 88A5      LDD	R10,Z+21
+(0133) 	      	 if(keystateaddr=='1'){
+    00465 2D8A      MOV	R24,R10
+    00466 3381      CPI	R24,0x31
+    00467 F429      BNE	0x046D
+(0134) 		     //e8266tomcutopc_str[13+0*16] = '1';
+(0135) 		        PORTG |= (1<<2);
+    00468 9180 0065 LDS	R24,0x65
+    0046A 6084      ORI	R24,4
+    0046B 9380 0065 STS	0x65,R24
+(0136) 		     }
+(0137) 		     if(keystateaddr=='0'){
+    0046D 2D8A      MOV	R24,R10
+    0046E 3380      CPI	R24,0x30
+    0046F F429      BNE	0x0475
+(0138) 		        PORTG &= ~(1<<2);
+    00470 9180 0065 LDS	R24,0x65
+    00472 7F8B      ANDI	R24,0xFB
+    00473 9380 0065 STS	0x65,R24
+(0139) 			 //e8266tomcutopc_str[13+0*16] = '0';
+(0140) 		     }
+(0141) 	      }
+(0142) 	      //判断第二个开关
+(0143) 	   	  pstr = strstr(e8266tomcu_str,"200053199");
+    00475 EA29      LDI	R18,0xA9
+    00476 E031      LDI	R19,1
+    00477 EB0D      LDI	R16,0xBD
+    00478 E015      LDI	R17,5
+    00479 940E 0525 CALL	_strstr
+    0047B 01B8      MOVW	R22,R16
+(0144) 	   	  if(pstr != 0){//200053198,"switcher":
+    0047C 3000      CPI	R16,0
+    0047D 0701      CPC	R16,R17
+    0047E F091      BEQ	0x0491
+(0145) 	        keystateaddr = *(pstr+21);
+    0047F 01FB      MOVW	R30,R22
+    00480 88A5      LDD	R10,Z+21
+(0146) 	      	if(keystateaddr=='1'){
+    00481 2D8A      MOV	R24,R10
+    00482 3381      CPI	R24,0x31
+    00483 F429      BNE	0x0489
+(0147) 		       //e8266tomcutopc_str[15+0*16] = '1';
+(0148) 		       PORTG |= (1<<3);
+    00484 9180 0065 LDS	R24,0x65
+    00486 6088      ORI	R24,0x8
+    00487 9380 0065 STS	0x65,R24
+(0149) 		    }
+(0150) 		    if(keystateaddr=='0'){
+    00489 2D8A      MOV	R24,R10
+    0048A 3380      CPI	R24,0x30
+    0048B F429      BNE	0x0491
+(0151) 		       PORTG &= ~(1<<3);
+    0048C 9180 0065 LDS	R24,0x65
+    0048E 7F87      ANDI	R24,0xF7
+    0048F 9380 0065 STS	0x65,R24
+(0152) 			   //e8266tomcutopc_str[15+0*16] = '0';
+(0153) 		    }
+(0154) 	      }
+(0155) 		  pstr = strstr(e8266tomcu_str,"ok");
+    00491 EA26      LDI	R18,0xA6
+    00492 E031      LDI	R19,1
+    00493 EB0D      LDI	R16,0xBD
+    00494 E015      LDI	R17,5
+    00495 940E 0525 CALL	_strstr
+    00497 0158      MOVW	R10,R16
+    00498 01B5      MOVW	R22,R10
+(0156) 		  if(pstr != 0){
+    00499 3000      CPI	R16,0
+    0049A 0701      CPC	R16,R17
+    0049B F021      BEQ	0x04A0
+(0157) 		     wifitomcudatastate = 0;
+    0049C 2422      CLR	R2
+    0049D 9220 01A5 STS	uart.c:wifitomcudatastate,R2
+(0158) 			 break;
+    0049F C033      RJMP	0x04D3
+(0159) 		  }
+(0160) 		  else{
+(0161) 		    timensflag = 0;//可能接收到服务器按钮数据，等待节点/协调器上传数据
+    004A0 2422      CLR	R2
+    004A1 9220 0102 STS	timensflag,R2
+(0162) 		    time = 0;
+    004A3 9220 0104 STS	time,R2
+(0163) 		  }                    //定时上传数据重新计时，防止数据没更新就上传，导致
+(0164) 							  //按钮闪烁	 
+(0165) 	   //mcutopc_str(e8266tomcutopc_str);
+(0166) 	   //////判断开关是否按下代码到此结束////////////////////////////
+(0167)        for(i=0;i<e8266tomcu_num;i++)
+    004A5 2766      CLR	R22
+    004A6 2777      CLR	R23
+    004A7 C009      RJMP	0x04B1
+(0168)        {
+(0169)   	      e8266tomcu_str[i]=0;//清空
+    004A8 EB8D      LDI	R24,0xBD
+    004A9 E095      LDI	R25,5
+    004AA 01FB      MOVW	R30,R22
+    004AB 0FE8      ADD	R30,R24
+    004AC 1FF9      ADC	R31,R25
+    004AD 2422      CLR	R2
+    004AE 8220      ST	Z,R2
+    004AF 5F6F      SUBI	R22,0xFF
+    004B0 4F7F      SBCI	R23,0xFF
+    004B1 9020 01A2 LDS	R2,e8266tomcu_num
+    004B3 9030 01A3 LDS	R3,e8266tomcu_num+1
+    004B5 1562      CP	R22,R2
+    004B6 0573      CPC	R23,R3
+    004B7 F380      BCS	0x04A8
+(0170)        }
+(0171)        e8266tomcu_num=0;
+    004B8 2422      CLR	R2
+    004B9 2433      CLR	R3
+    004BA 9230 01A3 STS	e8266tomcu_num+1,R3
+    004BC 9220 01A2 STS	e8266tomcu_num,R2
+(0172) 	   wifitomcudatastate = 0;
+    004BE 9220 01A5 STS	uart.c:wifitomcudatastate,R2
+(0173) 	   }
+(0174) 	   break;
+(0175)       }
+(0176)    }
+    004C0 C012      RJMP	0x04D3
+(0177)    else{
+(0178)      e8266tomcu_str[e8266tomcu_num]=data;
+    004C1 EB8D      LDI	R24,0xBD
+    004C2 E095      LDI	R25,5
+    004C3 91E0 01A2 LDS	R30,e8266tomcu_num
+    004C5 91F0 01A3 LDS	R31,e8266tomcu_num+1
+    004C7 0FE8      ADD	R30,R24
+    004C8 1FF9      ADC	R31,R25
+    004C9 8340      ST	Z,R20
+(0179)      e8266tomcu_num++;
+    004CA 9180 01A2 LDS	R24,e8266tomcu_num
+    004CC 9190 01A3 LDS	R25,e8266tomcu_num+1
+    004CE 9601      ADIW	R24,1
+    004CF 9390 01A3 STS	e8266tomcu_num+1,R25
+    004D1 9380 01A2 STS	e8266tomcu_num,R24
+(0180)    }
+(0181)    
+(0182)    if(e8266tomcu_num==1000)e8266tomcu_num=0;
+    004D3 9180 01A2 LDS	R24,e8266tomcu_num
+    004D5 9190 01A3 LDS	R25,e8266tomcu_num+1
+    004D7 3E88      CPI	R24,0xE8
+    004D8 E0E3      LDI	R30,3
+    004D9 079E      CPC	R25,R30
+    004DA F431      BNE	0x04E1
+    004DB 2422      CLR	R2
+    004DC 2433      CLR	R3
+    004DD 9230 01A3 STS	e8266tomcu_num+1,R3
+    004DF 9220 01A2 STS	e8266tomcu_num,R2
+    004E1 940E 054C CALL	pop_xgsetF00C
+    004E3 9009      LD	R0,Y+
+    004E4 BE0F      OUT	0x3F,R0
+    004E5 91F9      LD	R31,Y+
+    004E6 91E9      LD	R30,Y+
+    004E7 91B9      LD	R27,Y+
+    004E8 91A9      LD	R26,Y+
+    004E9 9199      LD	R25,Y+
+    004EA 9189      LD	R24,Y+
+    004EB 9139      LD	R19,Y+
+    004EC 9129      LD	R18,Y+
+    004ED 9119      LD	R17,Y+
+    004EE 9109      LD	R16,Y+
+    004EF 9099      LD	R9,Y+
+    004F0 9089      LD	R8,Y+
+    004F1 9079      LD	R7,Y+
+    004F2 9069      LD	R6,Y+
+    004F3 9059      LD	R5,Y+
+    004F4 9049      LD	R4,Y+
+    004F5 9039      LD	R3,Y+
+    004F6 9029      LD	R2,Y+
+    004F7 9019      LD	R1,Y+
+    004F8 9009      LD	R0,Y+
+    004F9 9518      RETI
+(0183) }
+(0184) 
+(0185) //串口0  连接电脑
+(0186) void mcutopcSendByte0(unsigned char data)
+(0187) {
+(0188)    UDR0 = data;
+_mcutopcSendByte0:
+  data                 --> R16
+    004FA B90C      OUT	0x0C,R16
+(0189)    while(!(UCSR0A&(1<<5)));
+    004FB 9B5D      SBIS	0x0B,5
+    004FC CFFE      RJMP	0x04FB
+    004FD 9508      RET
+_mcutopc_str:
+  pstr                 --> R20
+    004FE 934A      ST	-Y,R20
+    004FF 935A      ST	-Y,R21
+    00500 01A8      MOVW	R20,R16
+(0190) }
+(0191) 
+(0192) void mcutopc_str(unsigned char *pstr)
+(0193) {
+    00501 C005      RJMP	0x0507
+(0194)    while(*pstr)
+(0195)    {	  
+(0196)       mcutopcSendByte0(*pstr);
+    00502 01FA      MOVW	R30,R20
+    00503 8100      LD	R16,Z
+    00504 DFF5      RCALL	_mcutopcSendByte0
+(0197)       pstr++;
+    00505 5F4F      SUBI	R20,0xFF
+    00506 4F5F      SBCI	R21,0xFF
+    00507 01FA      MOVW	R30,R20
+    00508 8020      LD	R2,Z
+    00509 2022      TST	R2
+    0050A F7B9      BNE	0x0502
+    0050B 9159      LD	R21,Y+
+    0050C 9149      LD	R20,Y+
+    0050D 9508      RET
+(0198)    }
+(0199) }
+(0200) 
+(0201) //串口1  连接8266
+(0202) void mcuto8266SendByte(unsigned char data)
+(0203) {
+(0204)    UDR1 = data;
+_mcuto8266SendByte:
+  data                 --> R16
+    0050E 9300 009C STS	0x9C,R16
+(0205)    while(!(UCSR1A&(1<<5)));
+    00510 9020 009B LDS	R2,0x9B
+    00512 FE25      SBRS	R2,5
+    00513 CFFC      RJMP	0x0510
+    00514 9508      RET
+_mcuto8266_str:
+  pstr                 --> R20
+    00515 934A      ST	-Y,R20
+    00516 935A      ST	-Y,R21
+    00517 01A8      MOVW	R20,R16
+(0206) }
+(0207) 
+(0208) void mcuto8266_str(unsigned char *pstr)
+(0209) {
+    00518 C005      RJMP	0x051E
+(0210)    while(*pstr)
+(0211)    {	  
+(0212)       mcuto8266SendByte(*pstr);
+    00519 01FA      MOVW	R30,R20
+    0051A 8100      LD	R16,Z
+    0051B DFF2      RCALL	_mcuto8266SendByte
+(0213)       pstr++;
+FILE: <library>
+    0051C 5F4F      SUBI	R20,0xFF
+    0051D 4F5F      SBCI	R21,0xFF
+    0051E 01FA      MOVW	R30,R20
+    0051F 8020      LD	R2,Z
+    00520 2022      TST	R2
+    00521 F7B9      BNE	0x0519
+    00522 9159      LD	R21,Y+
+    00523 9149      LD	R20,Y+
+    00524 9508      RET
+_strstr:
+    00525 2FE2      MOV	R30,R18
+    00526 2FF3      MOV	R31,R19
+    00527 2FA0      MOV	R26,R16
+    00528 2FB1      MOV	R27,R17
+    00529 8000      LD	R0,Z
+    0052A 2000      TST	R0
+    0052B F049      BEQ	0x0535
+    0052C 9631      ADIW	R30,1
+    0052D 901D      LD	R1,X+
+    0052E 2011      TST	R1
+    0052F F041      BEQ	0x0538
+    00530 1410      CP	R1,R0
+    00531 F3B9      BEQ	0x0529
+    00532 5F0F      SUBI	R16,0xFF
+    00533 4F1F      SBCI	R17,0xFF
+    00534 CFF0      RJMP	_strstr
+    00535 17E2      CP	R30,R18
+    00536 07F3      CPC	R31,R19
+    00537 F411      BNE	0x053A
+    00538 E000      LDI	R16,0
+    00539 E010      LDI	R17,0
+    0053A 9508      RET
+push_xgset300C:
+    0053B 935A      ST	-Y,R21
+    0053C 934A      ST	-Y,R20
+    0053D 92BA      ST	-Y,R11
+    0053E 92AA      ST	-Y,R10
+    0053F 9508      RET
+pop_xgset300C:
+    00540 90A9      LD	R10,Y+
+    00541 90B9      LD	R11,Y+
+    00542 9149      LD	R20,Y+
+    00543 9159      LD	R21,Y+
+    00544 9508      RET
+push_xgsetF00C:
+    00545 937A      ST	-Y,R23
+    00546 936A      ST	-Y,R22
+    00547 935A      ST	-Y,R21
+    00548 934A      ST	-Y,R20
+    00549 92BA      ST	-Y,R11
+    0054A 92AA      ST	-Y,R10
+    0054B 9508      RET
+pop_xgsetF00C:
+    0054C 90A9      LD	R10,Y+
+    0054D 90B9      LD	R11,Y+
+    0054E 9149      LD	R20,Y+
+    0054F 9159      LD	R21,Y+
+    00550 9169      LD	R22,Y+
+    00551 9179      LD	R23,Y+
+    00552 9508      RET

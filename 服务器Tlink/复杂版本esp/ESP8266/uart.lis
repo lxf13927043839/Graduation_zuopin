@@ -1,0 +1,1014 @@
+                        .module uart.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ..\..\5ESP82~1\ESP8266\source\uart.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ..\..\5ESP82~1\ESP8266\source\uart.c
+ 0000           _pctomcu_num::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0002                   .dbfile ..\..\5ESP82~1\ESP8266\source\uart.c
+ 0002                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0002                   .dbsym e pctomcu_num _pctomcu_num i
+ 0002           _e8266tomcu_num::
+ 0002                   .blkb 2
+                        .area idata
+ 0002 0000              .word 0
+                        .area data(ram, con, rel)
+ 0004                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0004                   .dbsym e e8266tomcu_num _e8266tomcu_num i
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0000                   .dbfunc e uart0_init _uart0_init fV
+                        .even
+ 0000           _uart0_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 23
+ 0000           ; // Crystal: 16.000Mhz
+ 0000           ; 
+ 0000           ; #include <iom64v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; #include <string.h>  
+ 0000           ; #include "uart.h"
+ 0000           ; 
+ 0000           ; extern unsigned char time;
+ 0000           ; unsigned int pctomcu_num=0,e8266tomcu_num=0;
+ 0000           ; unsigned char pctomcu_str[1024];//用来保存电脑/协调器发过来的数据
+ 0000           ; unsigned char e8266tomcu_str[1024];//用来保存wifi模块发过来的数据
+ 0000           ; //unsigned char *e8266tomcutopc_str="#00,00,00,00,1,1#";//接收到服务器给8266的开关量后处理保存并发给电脑/协调器
+ 0000           ;                                               //#00,00,00,00,1,1,00,00,00,00,1,1#
+ 0000           ; extern unsigned char linkokflag;
+ 0000           ; extern unsigned char Txto8266Buf[1024];
+ 0000           ; extern unsigned char timensflag;
+ 0000           ; //UART0 initialize
+ 0000           ; // desired baud rate: 9600
+ 0000           ; // actual: baud rate:9615 (0.2%)
+ 0000           ; // char size: 8 bit
+ 0000           ; // parity: Disabled
+ 0000           ; void uart0_init(void)//连接电脑
+ 0000           ; {
+ 0000                   .dbline 24
+ 0000           ;  UCSR0B = 0x00; //disable while setting baud rate
+ 0000 2224              clr R2
+ 0002 2AB8              out 0xa,R2
+ 0004                   .dbline 25
+ 0004           ;  UCSR0A = 0x00;
+ 0004 2BB8              out 0xb,R2
+ 0006                   .dbline 26
+ 0006           ;  UCSR0C = 0x06;
+ 0006 86E0              ldi R24,6
+ 0008 80939500          sts 149,R24
+ 000C                   .dbline 27
+ 000C           ;  UBRR0L = 0x67; //set baud rate lo    08
+ 000C 87E6              ldi R24,103
+ 000E 89B9              out 0x9,R24
+ 0010                   .dbline 28
+ 0010           ;  UBRR0H = 0x00; //set baud rate hi
+ 0010 20929000          sts 144,R2
+ 0014                   .dbline 29
+ 0014           ;  UCSR0B = 0x98;
+ 0014 88E9              ldi R24,152
+ 0016 8AB9              out 0xa,R24
+ 0018                   .dbline -2
+ 0018           L1:
+ 0018                   .dbline 0 ; func end
+ 0018 0895              ret
+ 001A                   .dbend
+ 001A                   .dbfunc e uart1_init _uart1_init fV
+                        .even
+ 001A           _uart1_init::
+ 001A                   .dbline -1
+ 001A                   .dbline 38
+ 001A           ; }
+ 001A           ; 
+ 001A           ; //UART1 initialize
+ 001A           ; // desired baud rate:9600
+ 001A           ; // actual baud rate:9615 (0.2%)
+ 001A           ; // char size: 8 bit
+ 001A           ; // parity: Disabled
+ 001A           ; void uart1_init(void)//连接8266
+ 001A           ; {
+ 001A                   .dbline 39
+ 001A           ;  UCSR1B = 0x00; //disable while setting baud rate
+ 001A 2224              clr R2
+ 001C 20929A00          sts 154,R2
+ 0020                   .dbline 40
+ 0020           ;  UCSR1A = 0x00;
+ 0020 20929B00          sts 155,R2
+ 0024                   .dbline 41
+ 0024           ;  UCSR1C = 0x06;
+ 0024 86E0              ldi R24,6
+ 0026 80939D00          sts 157,R24
+ 002A                   .dbline 42
+ 002A           ;  UBRR1L = 0x67; //set baud rate lo
+ 002A 87E6              ldi R24,103
+ 002C 80939900          sts 153,R24
+ 0030                   .dbline 43
+ 0030           ;  UBRR1H = 0x00; //set baud rate hi
+ 0030 20929800          sts 152,R2
+ 0034                   .dbline 44
+ 0034           ;  UCSR1B = 0x98;
+ 0034 88E9              ldi R24,152
+ 0036 80939A00          sts 154,R24
+ 003A                   .dbline -2
+ 003A           L2:
+ 003A                   .dbline 0 ; func end
+ 003A 0895              ret
+ 003C                   .dbend
+                        .area vector(rom, abs)
+                        .org 72
+ 0048 0C941E00          jmp _uart0_rx_isr
+                        .area text(rom, con, rel)
+ 003C                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+                        .area data(ram, con, rel)
+ 0004                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0004           L4:
+ 0004                   .blkb 1
+                        .area idata
+ 0004 00                .byte 0
+                        .area data(ram, con, rel)
+ 0005                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+                        .area text(rom, con, rel)
+ 003C                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 003C                   .dbfunc e uart0_rx_isr _uart0_rx_isr fV
+ 003C                   .dbsym s pctowifidatastate L4 c
+ 003C           ;           data -> R16
+ 003C           ;              i -> R16,R17
+                        .even
+ 003C           _uart0_rx_isr::
+ 003C 2A92              st -y,R2
+ 003E 3A92              st -y,R3
+ 0040 0A93              st -y,R16
+ 0042 1A93              st -y,R17
+ 0044 2A93              st -y,R18
+ 0046 3A93              st -y,R19
+ 0048 8A93              st -y,R24
+ 004A 9A93              st -y,R25
+ 004C AA93              st -y,R26
+ 004E EA93              st -y,R30
+ 0050 FA93              st -y,R31
+ 0052 2FB6              IN R2,63
+ 0054 2A92              st -y,R2
+ 0056                   .dbline -1
+ 0056                   .dbline 49
+ 0056           ; }
+ 0056           ; 
+ 0056           ; #pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+ 0056           ; void uart0_rx_isr(void)  //接收电脑发来的数据
+ 0056           ; {
+ 0056                   .dbline 56
+ 0056           ;  //添加状态机，只接收以[开始的数据，以]结束后上报到服务器，
+ 0056           ;  //以\0代替最后的]标记，然后修改主程序是上传标记位timensflag=1;立即上报服务器 
+ 0056           ;  //uart has received a character in UDR
+ 0056           ;    static unsigned char pctowifidatastate = 0;
+ 0056           ;    unsigned char data;
+ 0056           ;    unsigned int i;
+ 0056           ;    data=UDR0;
+ 0056 0CB1              in R16,0xc
+ 0058                   .dbline 58
+ 0058           ;    ///////////wifi连接成功以后才对电脑/协调器发来的处理进行处理//////////////
+ 0058           ;    if(linkokflag==1){
+ 0058 80910000          lds R24,_linkokflag
+ 005C 8130              cpi R24,1
+ 005E 09F0              breq X8
+ 0060 90C0              xjmp L5
+ 0062           X8:
+ 0062           X0:
+ 0062                   .dbline 58
+ 0062                   .dbline 59
+ 0062           ;       switch(pctowifidatastate){
+ 0062 20910400          lds R18,L4
+ 0066 3327              clr R19
+ 0068 2030              cpi R18,0
+ 006A 2307              cpc R18,R19
+ 006C 29F0              breq L10
+ 006E           X1:
+ 006E 2130              cpi R18,1
+ 0070 E0E0              ldi R30,0
+ 0072 3E07              cpc R19,R30
+ 0074 71F0              breq L13
+ 0076           X2:
+ 0076 85C0              xjmp L7
+ 0078           L10:
+ 0078                   .dbline 61
+ 0078           ;            case 0:   
+ 0078           ;          if(data=='['){//接收电脑发过来的数据,判断数据是否为[，是则正式接收
+ 0078 0B35              cpi R16,91
+ 007A 09F0              breq X9
+ 007C 82C0              xjmp L8
+ 007E           X9:
+ 007E           X3:
+ 007E                   .dbline 61
+ 007E                   .dbline 62
+ 007E           ;              pctowifidatastate = 1;
+ 007E 81E0              ldi R24,1
+ 0080 80930400          sts L4,R24
+ 0084                   .dbline 63
+ 0084           ;                  pctomcu_num = 0;
+ 0084 2224              clr R2
+ 0086 3324              clr R3
+ 0088 30920100          sts _pctomcu_num+1,R3
+ 008C 20920000          sts _pctomcu_num,R2
+ 0090                   .dbline 64
+ 0090           ;                }
+ 0090                   .dbline 65
+ 0090           ;                break; 
+ 0090 78C0              xjmp L8
+ 0092           L13:
+ 0092                   .dbline 67
+ 0092           ;                case 1:        
+ 0092           ;                pctomcu_str[pctomcu_num]=data;
+ 0092 80E0              ldi R24,<_pctomcu_str
+ 0094 90E0              ldi R25,>_pctomcu_str
+ 0096 E0910000          lds R30,_pctomcu_num
+ 009A F0910100          lds R31,_pctomcu_num+1
+ 009E E80F              add R30,R24
+ 00A0 F91F              adc R31,R25
+ 00A2 0083              std z+0,R16
+ 00A4                   .dbline 68
+ 00A4           ;                pctomcu_num++;
+ 00A4 80910000          lds R24,_pctomcu_num
+ 00A8 90910100          lds R25,_pctomcu_num+1
+ 00AC 0196              adiw R24,1
+ 00AE 90930100          sts _pctomcu_num+1,R25
+ 00B2 80930000          sts _pctomcu_num,R24
+ 00B6                   .dbline 69
+ 00B6           ;                if(pctomcu_str[pctomcu_num-1]==']'){//接收完电脑/协调器发过来的数据
+ 00B6 80E0              ldi R24,<_pctomcu_str
+ 00B8 90E0              ldi R25,>_pctomcu_str
+ 00BA E0910000          lds R30,_pctomcu_num
+ 00BE F0910100          lds R31,_pctomcu_num+1
+ 00C2 3197              sbiw R30,1
+ 00C4 E80F              add R30,R24
+ 00C6 F91F              adc R31,R25
+ 00C8 8081              ldd R24,z+0
+ 00CA 8D35              cpi R24,93
+ 00CC 09F0              breq X10
+ 00CE 59C0              xjmp L8
+ 00D0           X10:
+ 00D0           X4:
+ 00D0                   .dbline 69
+ 00D0                   .dbline 70
+ 00D0           ;               pctomcu_str[pctomcu_num-1]='\0';
+ 00D0 80E0              ldi R24,<_pctomcu_str
+ 00D2 90E0              ldi R25,>_pctomcu_str
+ 00D4 E0910000          lds R30,_pctomcu_num
+ 00D8 F0910100          lds R31,_pctomcu_num+1
+ 00DC 3197              sbiw R30,1
+ 00DE E80F              add R30,R24
+ 00E0 F91F              adc R31,R25
+ 00E2 2224              clr R2
+ 00E4 2082              std z+0,R2
+ 00E6                   .dbline 74
+ 00E6           ;               //mcuto8266_str(pctomcu_str);    //从电脑/协调器接收来的数据发给8266
+ 00E6           ;                       //数据赋值到上传数据空间
+ 00E6           ;                       //mcutopc_str(pctomcu_str);
+ 00E6           ;                       for(i=0;i<=(pctomcu_num-3);i++)
+ 00E6 0027              clr R16
+ 00E8 1127              clr R17
+ 00EA 0EC0              xjmp L19
+ 00EC           L16:
+ 00EC                   .dbline 75
+ 00EC           ;               {
+ 00EC                   .dbline 76
+ 00EC           ;                  Txto8266Buf[i]=pctomcu_str[i];   
+ 00EC 80E0              ldi R24,<_pctomcu_str
+ 00EE 90E0              ldi R25,>_pctomcu_str
+ 00F0 F801              movw R30,R16
+ 00F2 E80F              add R30,R24
+ 00F4 F91F              adc R31,R25
+ 00F6 2080              ldd R2,z+0
+ 00F8 80E0              ldi R24,<_Txto8266Buf
+ 00FA 90E0              ldi R25,>_Txto8266Buf
+ 00FC F801              movw R30,R16
+ 00FE E80F              add R30,R24
+ 0100 F91F              adc R31,R25
+ 0102 2082              std z+0,R2
+ 0104                   .dbline 77
+ 0104           ;               }
+ 0104           L17:
+ 0104                   .dbline 74
+ 0104 0F5F              subi R16,255  ; offset = 1
+ 0106 1F4F              sbci R17,255
+ 0108           L19:
+ 0108                   .dbline 74
+ 0108 80910000          lds R24,_pctomcu_num
+ 010C 90910100          lds R25,_pctomcu_num+1
+ 0110 0397              sbiw R24,3
+ 0112 8017              cp R24,R16
+ 0114 9107              cpc R25,R17
+ 0116 50F7              brsh L16
+ 0118           X5:
+ 0118                   .dbline 78
+ 0118           ;                       if(pctomcu_str[pctomcu_num-2]=='1') //是否立即上传数据
+ 0118 80E0              ldi R24,<_pctomcu_str
+ 011A 90E0              ldi R25,>_pctomcu_str
+ 011C E0910000          lds R30,_pctomcu_num
+ 0120 F0910100          lds R31,_pctomcu_num+1
+ 0124 3297              sbiw R30,2
+ 0126 E80F              add R30,R24
+ 0128 F91F              adc R31,R25
+ 012A 8081              ldd R24,z+0
+ 012C 8133              cpi R24,49
+ 012E 19F4              brne L20
+ 0130           X6:
+ 0130                   .dbline 79
+ 0130           ;                          timensflag = 1;
+ 0130 81E0              ldi R24,1
+ 0132 80930000          sts _timensflag,R24
+ 0136           L20:
+ 0136                   .dbline 80
+ 0136           ;                       Txto8266Buf[pctomcu_num-2] =  '\0';  
+ 0136 80E0              ldi R24,<_Txto8266Buf
+ 0138 90E0              ldi R25,>_Txto8266Buf
+ 013A E0910000          lds R30,_pctomcu_num
+ 013E F0910100          lds R31,_pctomcu_num+1
+ 0142 3297              sbiw R30,2
+ 0144 E80F              add R30,R24
+ 0146 F91F              adc R31,R25
+ 0148 2224              clr R2
+ 014A 2082              std z+0,R2
+ 014C                   .dbline 91
+ 014C           ;                       //更新mcu下发到电脑/协调器的数据，测试用
+ 014C           ;                       /*if(pctomcu_str[1*13] == '1')
+ 014C           ;                           e8266tomcutopc_str[13+0*16] =  '1';
+ 014C           ;                       else
+ 014C           ;                               e8266tomcutopc_str[13+0*16] =  '0';
+ 014C           ;                       if(pctomcu_str[1*15] == '1')
+ 014C           ;                           e8266tomcutopc_str[15+0*16] =  '1';
+ 014C           ;                       else
+ 014C           ;                               e8266tomcutopc_str[15+0*16] =  '0';测试用*/
+ 014C           ;                       /////////////更新mcu下发到电脑/协调器的数据到此结束/////////////        
+ 014C           ;                       for(i=0;i<=pctomcu_num;i++)
+ 014C 0027              clr R16
+ 014E 1127              clr R17
+ 0150 09C0              xjmp L25
+ 0152           L22:
+ 0152                   .dbline 92
+ 0152           ;               {
+ 0152                   .dbline 93
+ 0152           ;                  pctomcu_str[i]=0;   //清空数据缓存
+ 0152 80E0              ldi R24,<_pctomcu_str
+ 0154 90E0              ldi R25,>_pctomcu_str
+ 0156 F801              movw R30,R16
+ 0158 E80F              add R30,R24
+ 015A F91F              adc R31,R25
+ 015C 2224              clr R2
+ 015E 2082              std z+0,R2
+ 0160                   .dbline 94
+ 0160           ;               }
+ 0160           L23:
+ 0160                   .dbline 91
+ 0160 0F5F              subi R16,255  ; offset = 1
+ 0162 1F4F              sbci R17,255
+ 0164           L25:
+ 0164                   .dbline 91
+ 0164 20900000          lds R2,_pctomcu_num
+ 0168 30900100          lds R3,_pctomcu_num+1
+ 016C 2016              cp R2,R16
+ 016E 3106              cpc R3,R17
+ 0170 80F7              brsh L22
+ 0172           X7:
+ 0172                   .dbline 95
+ 0172           ;               pctomcu_num=0;  //计数清0
+ 0172 2224              clr R2
+ 0174 3324              clr R3
+ 0176 30920100          sts _pctomcu_num+1,R3
+ 017A 20920000          sts _pctomcu_num,R2
+ 017E                   .dbline 96
+ 017E           ;                       pctowifidatastate = 0;//状态回0，重新接收数据包
+ 017E 20920400          sts L4,R2
+ 0182                   .dbline 97
+ 0182           ;            }  
+ 0182                   .dbline 98
+ 0182           ;                break;   
+ 0182           L7:
+ 0182           L8:
+ 0182                   .dbline 100
+ 0182           ;       } 
+ 0182           ;       }   
+ 0182           L5:
+ 0182                   .dbline -2
+ 0182           L3:
+ 0182                   .dbline 0 ; func end
+ 0182 2990              ld R2,y+
+ 0184 2FBE              OUT 63,R2
+ 0186 F991              ld R31,y+
+ 0188 E991              ld R30,y+
+ 018A A991              ld R26,y+
+ 018C 9991              ld R25,y+
+ 018E 8991              ld R24,y+
+ 0190 3991              ld R19,y+
+ 0192 2991              ld R18,y+
+ 0194 1991              ld R17,y+
+ 0196 0991              ld R16,y+
+ 0198 3990              ld R3,y+
+ 019A 2990              ld R2,y+
+ 019C 1895              reti
+ 019E                   .dbsym r data 16 c
+ 019E                   .dbsym r i 16 i
+ 019E                   .dbend
+                        .area vector(rom, abs)
+                        .org 120
+ 0078 0C94CF00          jmp _uart1_rx_isr
+                        .area text(rom, con, rel)
+ 019E                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+                        .area data(ram, con, rel)
+ 0005                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0005           L27:
+ 0005                   .blkb 1
+                        .area idata
+ 0005 00                .byte 0
+                        .area data(ram, con, rel)
+ 0006                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+                        .area text(rom, con, rel)
+ 019E                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 019E                   .dbfunc e uart1_rx_isr _uart1_rx_isr fV
+ 019E                   .dbsym s wifitomcudatastate L27 c
+ 019E           ;   keystateaddr -> R10
+ 019E           ;           pstr -> R22,R23
+ 019E           ;              i -> R22,R23
+ 019E           ;           data -> R20
+                        .even
+ 019E           _uart1_rx_isr::
+ 019E 0A92              st -y,R0
+ 01A0 1A92              st -y,R1
+ 01A2 2A92              st -y,R2
+ 01A4 3A92              st -y,R3
+ 01A6 4A92              st -y,R4
+ 01A8 5A92              st -y,R5
+ 01AA 6A92              st -y,R6
+ 01AC 7A92              st -y,R7
+ 01AE 8A92              st -y,R8
+ 01B0 9A92              st -y,R9
+ 01B2 0A93              st -y,R16
+ 01B4 1A93              st -y,R17
+ 01B6 2A93              st -y,R18
+ 01B8 3A93              st -y,R19
+ 01BA 8A93              st -y,R24
+ 01BC 9A93              st -y,R25
+ 01BE AA93              st -y,R26
+ 01C0 BA93              st -y,R27
+ 01C2 EA93              st -y,R30
+ 01C4 FA93              st -y,R31
+ 01C6 0FB6              IN R0,63
+ 01C8 0A92              st -y,R0
+ 01CA 0E940000          xcall push_xgsetF00C
+ 01CE                   .dbline -1
+ 01CE                   .dbline 106
+ 01CE           ; }
+ 01CE           ; 
+ 01CE           ; 
+ 01CE           ; #pragma interrupt_handler uart1_rx_isr:iv_USART1_RXC
+ 01CE           ; void uart1_rx_isr(void)   //接收8266发送过来的数据
+ 01CE           ; {
+ 01CE                   .dbline 113
+ 01CE           ;  //uart has received a character in UDR
+ 01CE           ;    static unsigned char wifitomcudatastate = 0;
+ 01CE           ;    unsigned char data;
+ 01CE           ;    unsigned int i;
+ 01CE           ;    char *pstr;//用来保存字符匹配的位置
+ 01CE           ;    char keystateaddr;
+ 01CE           ;    data = UDR1;
+ 01CE 40919C00          lds R20,156
+ 01D2                   .dbline 114
+ 01D2           ;    if(linkokflag==1){
+ 01D2 80910000          lds R24,_linkokflag
+ 01D6 8130              cpi R24,1
+ 01D8 09F0              breq X25
+ 01DA ADC0              xjmp L28
+ 01DC           X25:
+ 01DC           X11:
+ 01DC                   .dbline 114
+ 01DC                   .dbline 115
+ 01DC           ;       switch(wifitomcudatastate){
+ 01DC 60910500          lds R22,L27
+ 01E0 7727              clr R23
+ 01E2 6030              cpi R22,0
+ 01E4 6707              cpc R22,R23
+ 01E6 29F0              breq L33
+ 01E8           X12:
+ 01E8 6130              cpi R22,1
+ 01EA E0E0              ldi R30,0
+ 01EC 7E07              cpc R23,R30
+ 01EE 71F0              breq L36
+ 01F0           X13:
+ 01F0 B4C0              xjmp L29
+ 01F2           L33:
+ 01F2                   .dbline 117
+ 01F2           ;            case 0:   
+ 01F2           ;          if(data=='['){//接收8266发过来的数据,判断数据是否为[，是则正式接收
+ 01F2 4B35              cpi R20,91
+ 01F4 09F0              breq X26
+ 01F6 B1C0              xjmp L29
+ 01F8           X26:
+ 01F8           X14:
+ 01F8                   .dbline 117
+ 01F8                   .dbline 118
+ 01F8           ;              wifitomcudatastate = 1;
+ 01F8 81E0              ldi R24,1
+ 01FA 80930500          sts L27,R24
+ 01FE                   .dbline 119
+ 01FE           ;                  e8266tomcu_num = 0;
+ 01FE 2224              clr R2
+ 0200 3324              clr R3
+ 0202 30920300          sts _e8266tomcu_num+1,R3
+ 0206 20920200          sts _e8266tomcu_num,R2
+ 020A                   .dbline 120
+ 020A           ;                }
+ 020A                   .dbline 121
+ 020A           ;                break; 
+ 020A A7C0              xjmp L29
+ 020C           L36:
+ 020C                   .dbline 123
+ 020C           ;                case 1:        
+ 020C           ;                e8266tomcu_str[e8266tomcu_num]=data;
+ 020C 80E0              ldi R24,<_e8266tomcu_str
+ 020E 90E0              ldi R25,>_e8266tomcu_str
+ 0210 E0910200          lds R30,_e8266tomcu_num
+ 0214 F0910300          lds R31,_e8266tomcu_num+1
+ 0218 E80F              add R30,R24
+ 021A F91F              adc R31,R25
+ 021C 4083              std z+0,R20
+ 021E                   .dbline 124
+ 021E           ;                e8266tomcu_num++;
+ 021E 80910200          lds R24,_e8266tomcu_num
+ 0222 90910300          lds R25,_e8266tomcu_num+1
+ 0226 0196              adiw R24,1
+ 0228 90930300          sts _e8266tomcu_num+1,R25
+ 022C 80930200          sts _e8266tomcu_num,R24
+ 0230                   .dbline 125
+ 0230           ;                if(e8266tomcu_str[e8266tomcu_num-1]==']'){//接收完服务器发过来的数据
+ 0230 80E0              ldi R24,<_e8266tomcu_str
+ 0232 90E0              ldi R25,>_e8266tomcu_str
+ 0234 E0910200          lds R30,_e8266tomcu_num
+ 0238 F0910300          lds R31,_e8266tomcu_num+1
+ 023C 3197              sbiw R30,1
+ 023E E80F              add R30,R24
+ 0240 F91F              adc R31,R25
+ 0242 8081              ldd R24,z+0
+ 0244 8D35              cpi R24,93
+ 0246 09F0              breq X27
+ 0248 88C0              xjmp L29
+ 024A           X27:
+ 024A           X15:
+ 024A                   .dbline 125
+ 024A                   .dbline 126
+ 024A           ;               e8266tomcu_str[e8266tomcu_num-1]='\0';
+ 024A 80E0              ldi R24,<_e8266tomcu_str
+ 024C 90E0              ldi R25,>_e8266tomcu_str
+ 024E E0910200          lds R30,_e8266tomcu_num
+ 0252 F0910300          lds R31,_e8266tomcu_num+1
+ 0256 3197              sbiw R30,1
+ 0258 E80F              add R30,R24
+ 025A F91F              adc R31,R25
+ 025C 2224              clr R2
+ 025E 2082              std z+0,R2
+ 0260                   .dbline 127
+ 0260           ;                       mcutopc_str(e8266tomcu_str);//把8266发来的原始数据发送给电脑/协调器
+ 0260 00E0              ldi R16,<_e8266tomcu_str
+ 0262 10E0              ldi R17,>_e8266tomcu_str
+ 0264 A5D0              xcall _mcutopc_str
+ 0266                   .dbline 130
+ 0266           ;           ////////////////////此处开始判断开关是否按下///////////////////////////
+ 0266           ;             //判断第一个开关
+ 0266           ;             pstr = strstr(e8266tomcu_str,"200053198");
+ 0266 20E0              ldi R18,<L39
+ 0268 30E0              ldi R19,>L39
+ 026A 00E0              ldi R16,<_e8266tomcu_str
+ 026C 10E0              ldi R17,>_e8266tomcu_str
+ 026E 0E940000          xcall _strstr
+ 0272 B801              movw R22,R16
+ 0274                   .dbline 131
+ 0274           ;                 if(pstr != 0){
+ 0274 0030              cpi R16,0
+ 0276 0107              cpc R16,R17
+ 0278 91F0              breq L40
+ 027A           X16:
+ 027A                   .dbline 131
+ 027A                   .dbline 132
+ 027A           ;                keystateaddr = *(pstr+21);
+ 027A FB01              movw R30,R22
+ 027C A588              ldd R10,z+21
+ 027E                   .dbline 133
+ 027E           ;                if(keystateaddr=='1'){
+ 027E 8A2D              mov R24,R10
+ 0280 8133              cpi R24,49
+ 0282 29F4              brne L42
+ 0284           X17:
+ 0284                   .dbline 133
+ 0284                   .dbline 135
+ 0284           ;                    //e8266tomcutopc_str[13+0*16] = '1';
+ 0284           ;                       PORTG |= (1<<2);
+ 0284 80916500          lds R24,101
+ 0288 8460              ori R24,4
+ 028A 80936500          sts 101,R24
+ 028E                   .dbline 136
+ 028E           ;                    }
+ 028E           L42:
+ 028E                   .dbline 137
+ 028E           ;                    if(keystateaddr=='0'){
+ 028E 8A2D              mov R24,R10
+ 0290 8033              cpi R24,48
+ 0292 29F4              brne L44
+ 0294           X18:
+ 0294                   .dbline 137
+ 0294                   .dbline 138
+ 0294           ;                       PORTG &= ~(1<<2);
+ 0294 80916500          lds R24,101
+ 0298 8B7F              andi R24,251
+ 029A 80936500          sts 101,R24
+ 029E                   .dbline 140
+ 029E           ;                        //e8266tomcutopc_str[13+0*16] = '0';
+ 029E           ;                    }
+ 029E           L44:
+ 029E                   .dbline 141
+ 029E           ;             }
+ 029E           L40:
+ 029E                   .dbline 143
+ 029E           ;             //判断第二个开关
+ 029E           ;                 pstr = strstr(e8266tomcu_str,"200053199");
+ 029E 20E0              ldi R18,<L46
+ 02A0 30E0              ldi R19,>L46
+ 02A2 00E0              ldi R16,<_e8266tomcu_str
+ 02A4 10E0              ldi R17,>_e8266tomcu_str
+ 02A6 0E940000          xcall _strstr
+ 02AA B801              movw R22,R16
+ 02AC                   .dbline 144
+ 02AC           ;                 if(pstr != 0){//200053198,"switcher":
+ 02AC 0030              cpi R16,0
+ 02AE 0107              cpc R16,R17
+ 02B0 91F0              breq L47
+ 02B2           X19:
+ 02B2                   .dbline 144
+ 02B2                   .dbline 145
+ 02B2           ;               keystateaddr = *(pstr+21);
+ 02B2 FB01              movw R30,R22
+ 02B4 A588              ldd R10,z+21
+ 02B6                   .dbline 146
+ 02B6           ;               if(keystateaddr=='1'){
+ 02B6 8A2D              mov R24,R10
+ 02B8 8133              cpi R24,49
+ 02BA 29F4              brne L49
+ 02BC           X20:
+ 02BC                   .dbline 146
+ 02BC                   .dbline 148
+ 02BC           ;                      //e8266tomcutopc_str[15+0*16] = '1';
+ 02BC           ;                      PORTG |= (1<<3);
+ 02BC 80916500          lds R24,101
+ 02C0 8860              ori R24,8
+ 02C2 80936500          sts 101,R24
+ 02C6                   .dbline 149
+ 02C6           ;                   }
+ 02C6           L49:
+ 02C6                   .dbline 150
+ 02C6           ;                   if(keystateaddr=='0'){
+ 02C6 8A2D              mov R24,R10
+ 02C8 8033              cpi R24,48
+ 02CA 29F4              brne L51
+ 02CC           X21:
+ 02CC                   .dbline 150
+ 02CC                   .dbline 151
+ 02CC           ;                      PORTG &= ~(1<<3);
+ 02CC 80916500          lds R24,101
+ 02D0 877F              andi R24,247
+ 02D2 80936500          sts 101,R24
+ 02D6                   .dbline 153
+ 02D6           ;                          //e8266tomcutopc_str[15+0*16] = '0';
+ 02D6           ;                   }
+ 02D6           L51:
+ 02D6                   .dbline 154
+ 02D6           ;             }
+ 02D6           L47:
+ 02D6                   .dbline 155
+ 02D6           ;                 pstr = strstr(e8266tomcu_str,"ok");
+ 02D6 20E0              ldi R18,<L53
+ 02D8 30E0              ldi R19,>L53
+ 02DA 00E0              ldi R16,<_e8266tomcu_str
+ 02DC 10E0              ldi R17,>_e8266tomcu_str
+ 02DE 0E940000          xcall _strstr
+ 02E2 5801              movw R10,R16
+ 02E4 B501              movw R22,R10
+ 02E6                   .dbline 156
+ 02E6           ;                 if(pstr != 0){
+ 02E6 0030              cpi R16,0
+ 02E8 0107              cpc R16,R17
+ 02EA 21F0              breq L54
+ 02EC           X22:
+ 02EC                   .dbline 156
+ 02EC                   .dbline 157
+ 02EC           ;                    wifitomcudatastate = 0;
+ 02EC 2224              clr R2
+ 02EE 20920500          sts L27,R2
+ 02F2                   .dbline 158
+ 02F2           ;                        break;
+ 02F2 33C0              xjmp L29
+ 02F4           L54:
+ 02F4                   .dbline 160
+ 02F4           ;                 }
+ 02F4           ;                 else{
+ 02F4                   .dbline 161
+ 02F4           ;                   timensflag = 0;//可能接收到服务器按钮数据，等待节点/协调器上传数据
+ 02F4 2224              clr R2
+ 02F6 20920000          sts _timensflag,R2
+ 02FA                   .dbline 162
+ 02FA           ;                   time = 0;
+ 02FA 20920000          sts _time,R2
+ 02FE                   .dbline 163
+ 02FE           ;                 }                    //定时上传数据重新计时，防止数据没更新就上传，导致
+ 02FE                   .dbline 167
+ 02FE           ;                                                         //按钮闪烁     
+ 02FE           ;          //mcutopc_str(e8266tomcutopc_str);
+ 02FE           ;          //////判断开关是否按下代码到此结束////////////////////////////
+ 02FE           ;        for(i=0;i<e8266tomcu_num;i++)
+ 02FE 6627              clr R22
+ 0300 7727              clr R23
+ 0302 09C0              xjmp L59
+ 0304           L56:
+ 0304                   .dbline 168
+ 0304           ;        {
+ 0304                   .dbline 169
+ 0304           ;             e8266tomcu_str[i]=0;//清空
+ 0304 80E0              ldi R24,<_e8266tomcu_str
+ 0306 90E0              ldi R25,>_e8266tomcu_str
+ 0308 FB01              movw R30,R22
+ 030A E80F              add R30,R24
+ 030C F91F              adc R31,R25
+ 030E 2224              clr R2
+ 0310 2082              std z+0,R2
+ 0312                   .dbline 170
+ 0312           ;        }
+ 0312           L57:
+ 0312                   .dbline 167
+ 0312 6F5F              subi R22,255  ; offset = 1
+ 0314 7F4F              sbci R23,255
+ 0316           L59:
+ 0316                   .dbline 167
+ 0316 20900200          lds R2,_e8266tomcu_num
+ 031A 30900300          lds R3,_e8266tomcu_num+1
+ 031E 6215              cp R22,R2
+ 0320 7305              cpc R23,R3
+ 0322 80F3              brlo L56
+ 0324           X23:
+ 0324                   .dbline 171
+ 0324           ;        e8266tomcu_num=0;
+ 0324 2224              clr R2
+ 0326 3324              clr R3
+ 0328 30920300          sts _e8266tomcu_num+1,R3
+ 032C 20920200          sts _e8266tomcu_num,R2
+ 0330                   .dbline 172
+ 0330           ;          wifitomcudatastate = 0;
+ 0330 20920500          sts L27,R2
+ 0334                   .dbline 173
+ 0334           ;          }
+ 0334                   .dbline 174
+ 0334           ;          break;
+ 0334                   .dbline 176
+ 0334           ;       }
+ 0334           ;    }
+ 0334 12C0              xjmp L29
+ 0336           L28:
+ 0336                   .dbline 177
+ 0336           ;    else{
+ 0336                   .dbline 178
+ 0336           ;      e8266tomcu_str[e8266tomcu_num]=data;
+ 0336 80E0              ldi R24,<_e8266tomcu_str
+ 0338 90E0              ldi R25,>_e8266tomcu_str
+ 033A E0910200          lds R30,_e8266tomcu_num
+ 033E F0910300          lds R31,_e8266tomcu_num+1
+ 0342 E80F              add R30,R24
+ 0344 F91F              adc R31,R25
+ 0346 4083              std z+0,R20
+ 0348                   .dbline 179
+ 0348           ;      e8266tomcu_num++;
+ 0348 80910200          lds R24,_e8266tomcu_num
+ 034C 90910300          lds R25,_e8266tomcu_num+1
+ 0350 0196              adiw R24,1
+ 0352 90930300          sts _e8266tomcu_num+1,R25
+ 0356 80930200          sts _e8266tomcu_num,R24
+ 035A                   .dbline 180
+ 035A           ;    }
+ 035A           L29:
+ 035A                   .dbline 182
+ 035A           ;    
+ 035A           ;    if(e8266tomcu_num==1000)e8266tomcu_num=0;
+ 035A 80910200          lds R24,_e8266tomcu_num
+ 035E 90910300          lds R25,_e8266tomcu_num+1
+ 0362 883E              cpi R24,232
+ 0364 E3E0              ldi R30,3
+ 0366 9E07              cpc R25,R30
+ 0368 31F4              brne L60
+ 036A           X24:
+ 036A                   .dbline 182
+ 036A 2224              clr R2
+ 036C 3324              clr R3
+ 036E 30920300          sts _e8266tomcu_num+1,R3
+ 0372 20920200          sts _e8266tomcu_num,R2
+ 0376           L60:
+ 0376                   .dbline -2
+ 0376           L26:
+ 0376                   .dbline 0 ; func end
+ 0376 0E940000          xcall pop_xgsetF00C
+ 037A 0990              ld R0,y+
+ 037C 0FBE              OUT 63,R0
+ 037E F991              ld R31,y+
+ 0380 E991              ld R30,y+
+ 0382 B991              ld R27,y+
+ 0384 A991              ld R26,y+
+ 0386 9991              ld R25,y+
+ 0388 8991              ld R24,y+
+ 038A 3991              ld R19,y+
+ 038C 2991              ld R18,y+
+ 038E 1991              ld R17,y+
+ 0390 0991              ld R16,y+
+ 0392 9990              ld R9,y+
+ 0394 8990              ld R8,y+
+ 0396 7990              ld R7,y+
+ 0398 6990              ld R6,y+
+ 039A 5990              ld R5,y+
+ 039C 4990              ld R4,y+
+ 039E 3990              ld R3,y+
+ 03A0 2990              ld R2,y+
+ 03A2 1990              ld R1,y+
+ 03A4 0990              ld R0,y+
+ 03A6 1895              reti
+ 03A8                   .dbsym r keystateaddr 10 c
+ 03A8                   .dbsym r pstr 22 pc
+ 03A8                   .dbsym r i 22 i
+ 03A8                   .dbsym r data 20 c
+ 03A8                   .dbend
+ 03A8                   .dbfunc e mcutopcSendByte0 _mcutopcSendByte0 fV
+ 03A8           ;           data -> R16
+                        .even
+ 03A8           _mcutopcSendByte0::
+ 03A8                   .dbline -1
+ 03A8                   .dbline 187
+ 03A8           ; }
+ 03A8           ; 
+ 03A8           ; //串口0  连接电脑
+ 03A8           ; void mcutopcSendByte0(unsigned char data)
+ 03A8           ; {
+ 03A8                   .dbline 188
+ 03A8           ;    UDR0 = data;
+ 03A8 0CB9              out 0xc,R16
+ 03AA           L63:
+ 03AA                   .dbline 189
+ 03AA           ;    while(!(UCSR0A&(1<<5)));
+ 03AA           L64:
+ 03AA                   .dbline 189
+ 03AA 5D9B              sbis 0xb,5
+ 03AC FECF              rjmp L63
+ 03AE           X28:
+ 03AE                   .dbline -2
+ 03AE           L62:
+ 03AE                   .dbline 0 ; func end
+ 03AE 0895              ret
+ 03B0                   .dbsym r data 16 c
+ 03B0                   .dbend
+ 03B0                   .dbfunc e mcutopc_str _mcutopc_str fV
+ 03B0           ;           pstr -> R20,R21
+                        .even
+ 03B0           _mcutopc_str::
+ 03B0 4A93              st -y,R20
+ 03B2 5A93              st -y,R21
+ 03B4 A801              movw R20,R16
+ 03B6                   .dbline -1
+ 03B6                   .dbline 193
+ 03B6           ; }
+ 03B6           ; 
+ 03B6           ; void mcutopc_str(unsigned char *pstr)
+ 03B6           ; {
+ 03B6 05C0              xjmp L68
+ 03B8           L67:
+ 03B8                   .dbline 195
+ 03B8           ;    while(*pstr)
+ 03B8           ;    {    
+ 03B8                   .dbline 196
+ 03B8           ;       mcutopcSendByte0(*pstr);
+ 03B8 FA01              movw R30,R20
+ 03BA 0081              ldd R16,z+0
+ 03BC F5DF              xcall _mcutopcSendByte0
+ 03BE                   .dbline 197
+ 03BE           ;       pstr++;
+ 03BE 4F5F              subi R20,255  ; offset = 1
+ 03C0 5F4F              sbci R21,255
+ 03C2                   .dbline 198
+ 03C2           ;    }
+ 03C2           L68:
+ 03C2                   .dbline 194
+ 03C2 FA01              movw R30,R20
+ 03C4 2080              ldd R2,z+0
+ 03C6 2220              tst R2
+ 03C8 B9F7              brne L67
+ 03CA           X29:
+ 03CA                   .dbline -2
+ 03CA           L66:
+ 03CA                   .dbline 0 ; func end
+ 03CA 5991              ld R21,y+
+ 03CC 4991              ld R20,y+
+ 03CE 0895              ret
+ 03D0                   .dbsym r pstr 20 pc
+ 03D0                   .dbend
+ 03D0                   .dbfunc e mcuto8266SendByte _mcuto8266SendByte fV
+ 03D0           ;           data -> R16
+                        .even
+ 03D0           _mcuto8266SendByte::
+ 03D0                   .dbline -1
+ 03D0                   .dbline 203
+ 03D0           ; }
+ 03D0           ; 
+ 03D0           ; //串口1  连接8266
+ 03D0           ; void mcuto8266SendByte(unsigned char data)
+ 03D0           ; {
+ 03D0                   .dbline 204
+ 03D0           ;    UDR1 = data;
+ 03D0 00939C00          sts 156,R16
+ 03D4           L71:
+ 03D4                   .dbline 205
+ 03D4           ;    while(!(UCSR1A&(1<<5)));
+ 03D4           L72:
+ 03D4                   .dbline 205
+ 03D4 20909B00          lds R2,155
+ 03D8 25FE              sbrs R2,5
+ 03DA FCCF              rjmp L71
+ 03DC           X30:
+ 03DC                   .dbline -2
+ 03DC           L70:
+ 03DC                   .dbline 0 ; func end
+ 03DC 0895              ret
+ 03DE                   .dbsym r data 16 c
+ 03DE                   .dbend
+ 03DE                   .dbfunc e mcuto8266_str _mcuto8266_str fV
+ 03DE           ;           pstr -> R20,R21
+                        .even
+ 03DE           _mcuto8266_str::
+ 03DE 4A93              st -y,R20
+ 03E0 5A93              st -y,R21
+ 03E2 A801              movw R20,R16
+ 03E4                   .dbline -1
+ 03E4                   .dbline 209
+ 03E4           ; }
+ 03E4           ; 
+ 03E4           ; void mcuto8266_str(unsigned char *pstr)
+ 03E4           ; {
+ 03E4 05C0              xjmp L76
+ 03E6           L75:
+ 03E6                   .dbline 211
+ 03E6           ;    while(*pstr)
+ 03E6           ;    {    
+ 03E6                   .dbline 212
+ 03E6           ;       mcuto8266SendByte(*pstr);
+ 03E6 FA01              movw R30,R20
+ 03E8 0081              ldd R16,z+0
+ 03EA F2DF              xcall _mcuto8266SendByte
+ 03EC                   .dbline 213
+ 03EC           ;       pstr++;
+ 03EC 4F5F              subi R20,255  ; offset = 1
+ 03EE 5F4F              sbci R21,255
+ 03F0                   .dbline 214
+ 03F0           ;    }
+ 03F0           L76:
+ 03F0                   .dbline 210
+ 03F0 FA01              movw R30,R20
+ 03F2 2080              ldd R2,z+0
+ 03F4 2220              tst R2
+ 03F6 B9F7              brne L75
+ 03F8           X31:
+ 03F8                   .dbline -2
+ 03F8           L74:
+ 03F8                   .dbline 0 ; func end
+ 03F8 5991              ld R21,y+
+ 03FA 4991              ld R20,y+
+ 03FC 0895              ret
+ 03FE                   .dbsym r pstr 20 pc
+ 03FE                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0000           _e8266tomcu_str::
+ 0000                   .blkb 1024
+ 0400                   .dbsym e e8266tomcu_str _e8266tomcu_str A[1024:1024]c
+ 0400           _pctomcu_str::
+ 0400                   .blkb 1024
+ 0800                   .dbsym e pctomcu_str _pctomcu_str A[1024:1024]c
+                        .area data(ram, con, rel)
+ 0006                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0006           L53:
+ 0006                   .blkb 3
+                        .area idata
+ 0006 6F6B00            .byte 'o,'k,0
+                        .area data(ram, con, rel)
+ 0009                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0009           L46:
+ 0009                   .blkb 10
+                        .area idata
+ 0009 32303030353331393900      .byte 50,48,48,48,53,51,49,57,57,0
+                        .area data(ram, con, rel)
+ 0013                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 0013           L39:
+ 0013                   .blkb 10
+                        .area idata
+ 0013 32303030353331393800      .byte 50,48,48,48,53,51,49,57,56,0
+                        .area data(ram, con, rel)
+ 001D                   .dbfile D:\备课\0物联网与传感技术备课新\综合案例\5ESP82~1\ESP8266\source\uart.c
+ 001D           ; }

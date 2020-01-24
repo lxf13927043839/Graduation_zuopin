@@ -1,0 +1,423 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 0000           _time1sflag::
+ 0000                   .blkb 1
+                        .area idata
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0001                   .dbfile ..\..\..\..\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 0001                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 0001                   .dbsym e time1sflag _time1sflag c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 0000                   .dbfunc e delay _delay fV
+ 0000           ;              i -> R20,R21
+ 0000           ;             ms -> R16,R17
+                        .even
+ 0000           _delay::
+ 0000 4A93              st -y,R20
+ 0002 5A93              st -y,R21
+ 0004                   .dbline -1
+ 0004                   .dbline 13
+ 0004           ; //ICC-AVR application builder : 2015/8/10 13:48:34
+ 0004           ; // Target : M64
+ 0004           ; // Crystal: 16.000Mhz
+ 0004           ; 
+ 0004           ; #include <iom64v.h>
+ 0004           ; #include <macros.h>
+ 0004           ; #include "uart.h"
+ 0004           ; #include "ESP8266.h"
+ 0004           ; 
+ 0004           ; char time1sflag = 0;
+ 0004           ; 
+ 0004           ; void delay(int ms)
+ 0004           ; {
+ 0004 18C0              xjmp L3
+ 0006           L2:
+ 0006                   .dbline 16
+ 0006           ;   int i;
+ 0006           ;   while(ms--)
+ 0006           ;   {
+ 0006                   .dbline 17
+ 0006           ;     for(i=0;i<1000;i++)
+ 0006 4427              clr R20
+ 0008 5527              clr R21
+ 000A           L5:
+ 000A                   .dbline 18
+ 000A           ;       {
+ 000A                   .dbline 19
+ 000A           ;        NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 000A 0000              nop
+ 000C                   .dbline 19
+ 000C 0000              nop
+ 000E                   .dbline 19
+ 000E 0000              nop
+ 0010                   .dbline 19
+ 0010 0000              nop
+ 0012                   .dbline 19
+ 0012 0000              nop
+ 0014                   .dbline 19
+ 0014 0000              nop
+ 0016                   .dbline 19
+ 0016 0000              nop
+ 0018                   .dbline 19
+ 0018 0000              nop
+ 001A                   .dbline 20
+ 001A           ;        NOP();NOP();NOP();NOP();NOP();NOP();NOP();NOP();
+ 001A 0000              nop
+ 001C                   .dbline 20
+ 001C 0000              nop
+ 001E                   .dbline 20
+ 001E 0000              nop
+ 0020                   .dbline 20
+ 0020 0000              nop
+ 0022                   .dbline 20
+ 0022 0000              nop
+ 0024                   .dbline 20
+ 0024 0000              nop
+ 0026                   .dbline 20
+ 0026 0000              nop
+ 0028                   .dbline 20
+ 0028 0000              nop
+ 002A                   .dbline 21
+ 002A           ;       }
+ 002A           L6:
+ 002A                   .dbline 17
+ 002A 4F5F              subi R20,255  ; offset = 1
+ 002C 5F4F              sbci R21,255
+ 002E                   .dbline 17
+ 002E 483E              cpi R20,232
+ 0030 E3E0              ldi R30,3
+ 0032 5E07              cpc R21,R30
+ 0034 54F3              brlt L5
+ 0036           X0:
+ 0036                   .dbline 22
+ 0036           ;   }
+ 0036           L3:
+ 0036                   .dbline 15
+ 0036 1801              movw R2,R16
+ 0038 0150              subi R16,1
+ 003A 1040              sbci R17,0
+ 003C 2220              tst R2
+ 003E 19F7              brne L2
+ 0040 3320              tst R3
+ 0042 09F7              brne L2
+ 0044           X1:
+ 0044                   .dbline -2
+ 0044           L1:
+ 0044                   .dbline 0 ; func end
+ 0044 5991              ld R21,y+
+ 0046 4991              ld R20,y+
+ 0048 0895              ret
+ 004A                   .dbsym r i 20 I
+ 004A                   .dbsym r ms 16 I
+ 004A                   .dbend
+ 004A                   .dbfunc e port_init _port_init fV
+                        .even
+ 004A           _port_init::
+ 004A                   .dbline -1
+ 004A                   .dbline 26
+ 004A           ; }
+ 004A           ; 
+ 004A           ; void port_init(void)
+ 004A           ; {
+ 004A                   .dbline 27
+ 004A           ;  PORTA = 0x00;
+ 004A 2224              clr R2
+ 004C 2BBA              out 0x1b,R2
+ 004E                   .dbline 28
+ 004E           ;  DDRA  = 0x00;
+ 004E 2ABA              out 0x1a,R2
+ 0050                   .dbline 29
+ 0050           ;  PORTB = 0x00;
+ 0050 28BA              out 0x18,R2
+ 0052                   .dbline 30
+ 0052           ;  DDRB  = 0x00;
+ 0052 27BA              out 0x17,R2
+ 0054                   .dbline 31
+ 0054           ;  PORTC = 0x00; //m103 output only
+ 0054 25BA              out 0x15,R2
+ 0056                   .dbline 32
+ 0056           ;  DDRC  = 0x00;
+ 0056 24BA              out 0x14,R2
+ 0058                   .dbline 33
+ 0058           ;  PORTD = 0x00;
+ 0058 22BA              out 0x12,R2
+ 005A                   .dbline 34
+ 005A           ;  DDRD  = 0x00;
+ 005A 21BA              out 0x11,R2
+ 005C                   .dbline 35
+ 005C           ;  PORTE = 0x00;
+ 005C 23B8              out 0x3,R2
+ 005E                   .dbline 36
+ 005E           ;  DDRE  = 0x00;
+ 005E 22B8              out 0x2,R2
+ 0060                   .dbline 37
+ 0060           ;  PORTF = 0x00;
+ 0060 20926200          sts 98,R2
+ 0064                   .dbline 38
+ 0064           ;  DDRF  = 0x00;
+ 0064 20926100          sts 97,R2
+ 0068                   .dbline 39
+ 0068           ;  PORTG = 0x00;
+ 0068 20926500          sts 101,R2
+ 006C                   .dbline 40
+ 006C           ;  DDRG  = 0x1F;
+ 006C 8FE1              ldi R24,31
+ 006E 80936400          sts 100,R24
+ 0072                   .dbline -2
+ 0072           L9:
+ 0072                   .dbline 0 ; func end
+ 0072 0895              ret
+ 0074                   .dbend
+ 0074                   .dbfunc e timer3_init _timer3_init fV
+                        .even
+ 0074           _timer3_init::
+ 0074                   .dbline -1
+ 0074                   .dbline 48
+ 0074           ; }
+ 0074           ; 
+ 0074           ; //TIMER3 initialize - prescale:1024
+ 0074           ; // WGM: 0) Normal, TOP=0xFFFF
+ 0074           ; // desired value: 1Hz
+ 0074           ; // actual value:  1.000Hz (0.0%)
+ 0074           ; void timer3_init(void)
+ 0074           ; {
+ 0074                   .dbline 49
+ 0074           ;  TCCR3B = 0x00; //stop
+ 0074 2224              clr R2
+ 0076 20928A00          sts 138,R2
+ 007A                   .dbline 50
+ 007A           ;  TCNT3H = 0xC2; //setup
+ 007A 82EC              ldi R24,194
+ 007C 80938900          sts 137,R24
+ 0080                   .dbline 51
+ 0080           ;  TCNT3L = 0xF7;
+ 0080 87EF              ldi R24,247
+ 0082 80938800          sts 136,R24
+ 0086                   .dbline 52
+ 0086           ;  OCR3AH = 0x3D;
+ 0086 8DE3              ldi R24,61
+ 0088 80938700          sts 135,R24
+ 008C                   .dbline 53
+ 008C           ;  OCR3AL = 0x09;
+ 008C 89E0              ldi R24,9
+ 008E 80938600          sts 134,R24
+ 0092                   .dbline 54
+ 0092           ;  OCR3BH = 0x3D;
+ 0092 8DE3              ldi R24,61
+ 0094 80938500          sts 133,R24
+ 0098                   .dbline 55
+ 0098           ;  OCR3BL = 0x09;
+ 0098 89E0              ldi R24,9
+ 009A 80938400          sts 132,R24
+ 009E                   .dbline 56
+ 009E           ;  OCR3CH = 0x3D;
+ 009E 8DE3              ldi R24,61
+ 00A0 80938300          sts 131,R24
+ 00A4                   .dbline 57
+ 00A4           ;  OCR3CL = 0x09;
+ 00A4 89E0              ldi R24,9
+ 00A6 80938200          sts 130,R24
+ 00AA                   .dbline 58
+ 00AA           ;  ICR3H  = 0x3D;
+ 00AA 8DE3              ldi R24,61
+ 00AC 80938100          sts 129,R24
+ 00B0                   .dbline 59
+ 00B0           ;  ICR3L  = 0x09;
+ 00B0 89E0              ldi R24,9
+ 00B2 80938000          sts 128,R24
+ 00B6                   .dbline 60
+ 00B6           ;  TCCR3A = 0x00;
+ 00B6 20928B00          sts 139,R2
+ 00BA                   .dbline 61
+ 00BA           ;  TCCR3B = 0x05; //start Timer
+ 00BA 85E0              ldi R24,5
+ 00BC 80938A00          sts 138,R24
+ 00C0                   .dbline -2
+ 00C0           L10:
+ 00C0                   .dbline 0 ; func end
+ 00C0 0895              ret
+ 00C2                   .dbend
+                        .area vector(rom, abs)
+                        .org 116
+ 0074 0C946100          jmp _timer3_ovf_isr
+                        .area text(rom, con, rel)
+ 00C2                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 00C2                   .dbfunc e timer3_ovf_isr _timer3_ovf_isr fV
+                        .even
+ 00C2           _timer3_ovf_isr::
+ 00C2 2A92              st -y,R2
+ 00C4 8A93              st -y,R24
+ 00C6 2FB6              IN R2,63
+ 00C8 2A92              st -y,R2
+ 00CA                   .dbline -1
+ 00CA                   .dbline 66
+ 00CA           ; }
+ 00CA           ; 
+ 00CA           ; #pragma interrupt_handler timer3_ovf_isr:iv_TIM3_OVF
+ 00CA           ; void timer3_ovf_isr(void)
+ 00CA           ; {
+ 00CA                   .dbline 68
+ 00CA           ;  //TIMER3 has overflowed
+ 00CA           ;  TCNT3H = 0xC2; //reload counter high value
+ 00CA 82EC              ldi R24,194
+ 00CC 80938900          sts 137,R24
+ 00D0                   .dbline 69
+ 00D0           ;  TCNT3L = 0xF7; //reload counter low value
+ 00D0 87EF              ldi R24,247
+ 00D2 80938800          sts 136,R24
+ 00D6                   .dbline 70
+ 00D6           ;  time1sflag = 1;
+ 00D6 81E0              ldi R24,1
+ 00D8 80930000          sts _time1sflag,R24
+ 00DC                   .dbline 71
+ 00DC           ;  PORTG ^= 0X01;
+ 00DC 20906500          lds R2,101
+ 00E0 2826              eor R2,R24
+ 00E2 20926500          sts 101,R2
+ 00E6                   .dbline -2
+ 00E6           L11:
+ 00E6                   .dbline 0 ; func end
+ 00E6 2990              ld R2,y+
+ 00E8 2FBE              OUT 63,R2
+ 00EA 8991              ld R24,y+
+ 00EC 2990              ld R2,y+
+ 00EE 1895              reti
+ 00F0                   .dbend
+ 00F0                   .dbfunc e init_devices _init_devices fV
+                        .even
+ 00F0           _init_devices::
+ 00F0                   .dbline -1
+ 00F0                   .dbline 76
+ 00F0           ; }
+ 00F0           ; 
+ 00F0           ; //call this routine to initialize all peripherals
+ 00F0           ; void init_devices(void)
+ 00F0           ; {
+ 00F0                   .dbline 78
+ 00F0           ;  //stop errant interrupts until set up
+ 00F0           ;  CLI(); //disable all interrupts
+ 00F0 F894              cli
+ 00F2                   .dbline 79
+ 00F2           ;  XDIV  = 0x00; //xtal divider
+ 00F2 2224              clr R2
+ 00F4 2CBE              out 0x3c,R2
+ 00F6                   .dbline 80
+ 00F6           ;  XMCRA = 0x00; //external memory
+ 00F6 20926D00          sts 109,R2
+ 00FA                   .dbline 81
+ 00FA           ;  port_init();
+ 00FA A7DF              xcall _port_init
+ 00FC                   .dbline 83
+ 00FC           ;  //timer3_init();
+ 00FC           ;  uart0_init();
+ 00FC 0E940000          xcall _uart0_init
+ 0100                   .dbline 84
+ 0100           ;  uart1_init();
+ 0100 0E940000          xcall _uart1_init
+ 0104                   .dbline 86
+ 0104           ; 
+ 0104           ;  MCUCR = 0x00;
+ 0104 2224              clr R2
+ 0106 25BE              out 0x35,R2
+ 0108                   .dbline 87
+ 0108           ;  EICRA = 0x00; //extended ext ints
+ 0108 20926A00          sts 106,R2
+ 010C                   .dbline 88
+ 010C           ;  EICRB = 0x00; //extended ext ints
+ 010C 2ABE              out 0x3a,R2
+ 010E                   .dbline 89
+ 010E           ;  EIMSK = 0x00;
+ 010E 29BE              out 0x39,R2
+ 0110                   .dbline 90
+ 0110           ;  TIMSK = 0x00; //timer interrupt sources
+ 0110 27BE              out 0x37,R2
+ 0112                   .dbline 92
+ 0112           ;  //ETIMSK = 0x04; //extended timer interrupt sources
+ 0112           ;  SEI(); //re-enable interrupts
+ 0112 7894              sei
+ 0114                   .dbline -2
+ 0114           L12:
+ 0114                   .dbline 0 ; func end
+ 0114 0895              ret
+ 0116                   .dbend
+ 0116                   .dbfunc e main _main fI
+ 0116           ;              p -> <dead>
+ 0116           ;            num -> y+4
+ 0116           ;              i -> y+0
+                        .even
+ 0116           _main::
+ 0116 2897              sbiw R28,8
+ 0118                   .dbline -1
+ 0118                   .dbline 97
+ 0118           ;  //all peripherals are now initialized
+ 0118           ; }
+ 0118           ; unsigned char buf[1024];
+ 0118           ; int main(void)
+ 0118           ; {
+ 0118                   .dbline 98
+ 0118           ;   long i=0;
+ 0118 80E0              ldi R24,0
+ 011A 8883              std y+0,R24
+ 011C 8983              std y+1,R24
+ 011E 8A83              std y+2,R24
+ 0120 8B83              std y+3,R24
+ 0122                   .dbline 100
+ 0122           ;   unsigned char *p;
+ 0122           ;   long num=0;
+ 0122 80E0              ldi R24,0
+ 0124 8C83              std y+4+0,R24
+ 0126 8D83              std y+4+1,R24
+ 0128 8E83              std y+4+2,R24
+ 012A 8F83              std y+4+3,R24
+ 012C                   .dbline 101
+ 012C           ;   init_devices();
+ 012C E1DF              xcall _init_devices
+ 012E           L14:
+ 012E                   .dbline 107
+ 012E           ;   //PrintString("ESP8266 test!\r\n");
+ 012E           ;   //ESPSendString("AT+CWJAP=\"NETGEAR\",\"\"\r\n");
+ 012E           ;   //delay(5000);
+ 012E           ;   //PrintString("ESP8266 ok!\r\n");
+ 012E           ;   while(1)
+ 012E           ;   {
+ 012E                   .dbline 122
+ 012E           ;     /*if(time1sflag == 1)
+ 012E           ;       {
+ 012E           ;         time1sflag = 0;
+ 012E           ;       
+ 012E           ;       }*/
+ 012E           ;       
+ 012E           ;       //num=espgetline(buf);
+ 012E           ;       //if(num)
+ 012E           ;       //PrintString(buf);
+ 012E           ;       //for(i=0;i<num;i++)
+ 012E           ;       //{
+ 012E           ;         //buf[i]=0;
+ 012E           ;       //}
+ 012E           ;       
+ 012E           ;   }
+ 012E           L15:
+ 012E                   .dbline 106
+ 012E FFCF              xjmp L14
+ 0130           X2:
+ 0130                   .dbline -2
+ 0130           L13:
+ 0130                   .dbline 0 ; func end
+ 0130 2896              adiw R28,8
+ 0132 0895              ret
+ 0134                   .dbsym l p 1 pc
+ 0134                   .dbsym l num 4 L
+ 0134                   .dbsym l i 0 L
+ 0134                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile H:\0物联网与传感技术备课用\000备课——刘伟\7无线~1\2ESP82~1\5ESP82~1\ESP8266\source\main.c
+ 0000           _buf::
+ 0000                   .blkb 1024
+ 0400                   .dbsym e buf _buf A[1024:1024]c
+ 0400           ;   return 0;
+ 0400           ; }

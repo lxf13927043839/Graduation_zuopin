@@ -1,0 +1,8 @@
+[Files]
+source\ESP8266.c
+source\main.c
+source\uart.c
+[Headers]
+source\uart.h
+source\ESP8266.h
+[Documents]

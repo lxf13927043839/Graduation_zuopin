@@ -1,0 +1,6 @@
+[Files]
+source\main.c
+source\uart.c
+[Headers]
+source\uart.h
+[Documents]
